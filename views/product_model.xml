@@ -1,0 +1,162 @@
+<odoo>
+    <data>
+        <record id="view_model_search" model="ir.ui.view">
+            <field name="name">product model search</field>
+            <field name="model">product.model</field>
+            <field name="arch" type="xml">
+                <search string="WishList Search">
+                    <filter string="Active" name="filter_by_active" domain="[('active', '=', True)]"/>
+                    <filter string="Archived" name="filter_by_un_active" domain="[('active', '!=', True)]"/>
+                    <separator/>
+                    <field name="active"/>
+                    <filter string="Active" name="group_by_active" context="{'group_by':'active'}"/>
+                </search>
+            </field>
+        </record>
+
+
+        <record id="view_product_model_form" model="ir.ui.view">
+            <field name="name">product.model.form</field>
+            <field name="model">product.model</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                                attrs="{'invisible': [('active', '=', True)]}"/>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button"
+                                    name="%(product.product_template_action_all)d"
+                                    icon="fa-th-list"
+                                    type="action"
+                                    context="{'search_default_model_id': active_id, 'default_model_id': active_id}">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value">
+                                        <field name="products_count"/>
+                                    </span>
+                                    <span class="o_stat_text">Products</span>
+                                </div>
+                            </button>
+                        </div>
+                        <style>
+                            * {
+                            box-sizing: border-box;
+                            }
+                            .zoom{
+                            transition: transform .2s;
+                            margin: 0 auto;
+                            }
+                            .zoom1{
+                            transition: transform .2s;
+                            margin: 0 auto;
+                            }
+
+                            .zoom:hover {
+                            -ms-transform: scale(2.5); /* IE 9 */
+                            -webkit-transform: scale(2.5); /* Safari 3-8 */
+                            transform: scale(2.5);
+                            z-index: 999;
+                            }
+                            .zoom1:hover {
+                            -ms-transform: scale(2.5); /* IE 9 */
+                            -webkit-transform: scale(2.5); /* Safari 3-8 */
+                            transform: scale(2.5);
+                            z-index: 999;
+                            }
+                        </style>
+
+                        <field id="zoom" name="logo" widget="image" class="zoom oe_avatar"/>
+
+                        <field id="zoom1" name="bannar" widget="image" class="zoom1 oe_avatar"/>
+                        <div class="oe_title">
+                            <label for="name" string="model Name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="active" invisible="1"/>
+                            </group>
+                        </group>
+                        <group string="Description">
+                            <field name="description" nolabel="1"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_product_model_tree" model="ir.ui.view">
+            <field name="name">product.model.tree</field>
+            <field name="model">product.model</field>
+            <field name="arch" type="xml">
+                <tree string="product.model">
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_product_model_kanban" model="ir.ui.view">
+            <field name="name">model Kanban View</field>
+            <field name="model">product.model</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_badge">
+                    <field name="id"/>
+                    <field name="name"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="o_kanban_project_phases oe_kanban_global_click"
+                                 t-attf-style="height:100px;">
+                                <div class="o_kanban_image">
+                                    <img t-att-src="kanban_image('product.model', 'logo', record.id.raw_value)"
+                                         alt="model" class="o_image_64_contain"/>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <h4 class="mt0 mb0">
+                                        <field name="name"/>
+                                    </h4>
+                                    <strong class="o_kanban_record_title">
+                                        <p>
+                                            <field name="products_count"/>
+                                            Products
+                                        </p>
+                                    </strong>
+
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="action_models" model="ir.actions.act_window">
+            <field name="name">Models</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.model</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create Your Models
+                </p>
+                <p>
+                    <!-- More details about what a user can do with this object will be OK -->
+                </p>
+            </field>
+        </record>
+
+
+        <!-- This Menu Item must have a parent and an action -->
+        <menuitem id="menu_models"
+                  name="Models"
+                  parent="stock.menu_stock_inventory_control"
+                  action="action_models"/>
+    </data>
+</odoo>
