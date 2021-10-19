@@ -1,0 +1,10 @@
+<odoo>
+    <data>
+        <menuitem id="work_order_root" name="Work Order"/>
+        <menuitem id="work_order_sale" name="sale" parent="work_order_root"/>
+        <menuitem id="work_order_purchase" name="Purchase" parent="work_order_root"/>
+        <menuitem id="work_order_stock" name="Stock" parent="work_order_root"/>
+        <menuitem id="work_order_settings" name="Configuration" sequence="99"  parent="work_order_root"/>
+
+    </data>
+</odoo>

@@ -1,3 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_product_brand,product_brand,model_product_brand,stock.group_stock_manager,1,1,1,1
 access_product_model,product_model,model_product_model,stock.group_stock_manager,1,1,1,1
+access_res_machine,res_machine,model_res_machine,,1,1,1,1
+access_work_order,work_order,model_work_order,,1,1,1,1
+access_work_order_stage,work_order_stage,model_work_order_stage,,1,1,1,1
