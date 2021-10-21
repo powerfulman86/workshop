@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from . import contact
-from . import machine
+from . import res_partner
+from . import res_machine
 from . import product_model
 from . import product_brand
 from . import ProductTemplate
