@@ -18,6 +18,7 @@
         'views/product_model.xml',
         'views/product_template.xml',
         'views/work_order.xml',
+        'views/sale_order.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

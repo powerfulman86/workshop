@@ -128,7 +128,6 @@
                                             Products
                                         </p>
                                     </strong>
-
                                 </div>
                             </div>
                         </t>
@@ -156,7 +155,7 @@
         <!-- This Menu Item must have a parent and an action -->
         <menuitem id="menu_models"
                   name="Models"
-                  parent="stock.menu_stock_inventory_control"
+                  parent="work_order_settings" sequence="7"
                   action="action_models"/>
     </data>
 </odoo>

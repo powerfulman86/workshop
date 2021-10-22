@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields, models, api, SUPERUSER_ID, _
+from odoo.exceptions import ValidationError
 
 
 class WorkOrderStage(models.Model):
@@ -49,7 +50,8 @@ class WorkOrder(models.Model):
 
     def _get_default_stage_id(self):
         """ Gives default stage_id """
-        self.env['work.order.stage'].search([])
+        default_stage = self.env['work.order.stage'].search([], limit=1)
+        return default_stage
 
     name = fields.Char('Name')
     stage_id = fields.Many2one('work.order.stage', string='Stage', ondelete='restrict', tracking=True, index=True,
@@ -76,4 +78,17 @@ class WorkOrder(models.Model):
     def create(self, values):
         res = super(WorkOrder, self).create(values)
         res.name = self.env['ir.sequence'].next_by_code('work.order') or '/'
+        if not res.stage_id:
+            stage = self._get_default_stage_id()
+            res.stage_id = stage
         return res
+
+    def write(self, values):
+        last = self.stage_id.sequence
+        res = super(WorkOrder, self).write(values)
+        now = self.stage_id.sequence
+        if now < last:
+            raise ValidationError(_("Must Proceed In Forward Steps !"))
+
+        return res
+    

@@ -1,10 +1,66 @@
 <odoo>
     <data>
-        <menuitem id="work_order_root" name="Work Order"/>
-        <menuitem id="work_order_sale" name="sale" parent="work_order_root"/>
-        <menuitem id="work_order_purchase" name="Purchase" parent="work_order_root"/>
-        <menuitem id="work_order_stock" name="Stock" parent="work_order_root"/>
-        <menuitem id="work_order_settings" name="Configuration" sequence="99"  parent="work_order_root"/>
+        <!--workorder menu -->
+        <menuitem id="work_order_root" name="Work Order" action="work_order_action"/>
+        <menuitem id="work_order_calendar" name="Calendar" parent="work_order_root" sequence="1"
+                  action="calendar.action_calendar_event"/>
+        <menuitem id="work_order_sale" name="Sales" parent="work_order_root" sequence="3"/>
+        <menuitem id="work_order_purchase" name="Purchase" parent="work_order_root" sequence="4"/>
+        <menuitem id="work_order_stock" name="Inventory" parent="work_order_root" sequence="5"/>
+        <menuitem id="work_order_report" name="Reporting" parent="work_order_root" sequence="6"/>
+        <menuitem id="work_order_settings" name="Configuration" sequence="99" parent="work_order_root"/>
+        <menuitem id="work_order_configuration" name="Work-Order" sequence="99" parent="work_order_settings"/>
+
+        <!--configuration-->
+        <menuitem id="warehouse_menu" name="Warehouse" parent="work_order_settings" sequence="1"
+                  action="stock.action_warehouse_form"/>
+        <menuitem id="product_category" name="Product Category" parent="work_order_settings" sequence="2"
+                  action="product.product_category_action_form"/>
+        <menuitem id="products" name="Products" parent="work_order_settings" sequence="3"
+                  action="stock.product_template_action_product"/>
+        <menuitem id="sale_pricelist" name="Sales PriceList" parent="work_order_settings" sequence="4"
+                  action="product.product_pricelist_action2"/>
+        <menuitem id="vendor_pricelist" name="Vendor PriceList" parent="work_order_settings" sequence="5"
+                  action="product.product_supplierinfo_type_action"/>
+
+        <!--Workshop sales-->
+        <menuitem id="sale_orders" name="Sales Orders" parent="work_order_sale" sequence="1"
+                  action="sale.action_orders"/>
+        <!--        <menuitem id="menu_products" action="sale.product_template_action" parent="work_order_sale" sequence="2"/>-->
+        <menuitem id="sale_customers" name="Customers" parent="work_order_sale" sequence="2"
+                  action="account.res_partner_action_customer"/>
+        <menuitem id="sale_payment" name="Sales Orders Payment" parent="work_order_sale" sequence="3"
+                  action="account.action_account_payments"/>
+
+        <!--sales-->
+
+        <!--workshop purchase-->
+        <menuitem id="purchase_orders" name="Purchase Orders" parent="work_order_purchase" sequence="1"
+                  action="purchase.purchase_form_action"/>
+        <!--        <menuitem id="menu_retail_products" action="purchase.product_normal_action_puchased"-->
+        <!--                  parent="work_order_purchase"-->
+        <!--                  sequence="2"/>-->
+        <menuitem id="retail_vendor" name="Vendors" parent="work_order_purchase" sequence="2"
+                  action="account.res_partner_action_supplier"/>
+        <menuitem id="purchase_payment" name="Purchase Orders Payment" parent="work_order_purchase" sequence="3"
+                  action="account.action_account_payments_payable"/>
+
+        <!--purchase-->
+
+        <!--workshop Inventory-->
+        <menuitem id="warehouse_transfer" name="Transfers" parent="work_order_stock" sequence="4"
+                  action="stock.action_picking_tree_all"/>
+        <menuitem id="menu_valuation" name="Inventory Valuation" parent="work_order_stock" sequence="5"
+                  action="stock.action_inventory_form"/>
+
+        <!--Inventory-->
+
+
+        <!--reporting-->
+        <menuitem id="sales_report" name="Sales Reports" parent="work_order_report" sequence="2"
+                  action="sale.action_order_report_all"/>
+        <menuitem id="purchase_report" name="Purchase Report" parent="work_order_report" sequence="3"
+                  action="purchase.action_purchase_order_report_all"/>
 
     </data>
 </odoo>

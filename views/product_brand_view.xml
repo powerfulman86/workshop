@@ -174,7 +174,7 @@
 
 
     <!-- This Menu Item must have a parent and an action -->
-    <menuitem id="menu_brands" name="Brands" parent="stock.menu_stock_inventory_control" action="action_brands"
+    <menuitem id="menu_brands" name="Brands" parent="work_order_settings" action="action_brands"
               sequence="3"/>
 
 </odoo>

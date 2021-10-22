@@ -8,6 +8,7 @@
                 <kanban class="o_hr_employee_kanban">
                     <field name="id"/>
                     <field name="name"/>
+                    <field name="model_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
@@ -28,6 +29,9 @@
                                             </strong>
                                             <span t-if="record.partner_id" class="o_kanban_record_subtitle">
                                                 <field name="partner_id"/>
+                                            </span>
+                                            <span t-if="record.model_id" class="o_kanban_record_subtitle">
+                                                <field name="model_id"/>
                                             </span>
                                         </div>
                                     </div>
@@ -50,16 +54,38 @@
                         <div class="oe_title">
                             <label for="name" string="Name" class="oe_edit_only"/>
                             <h1>
-                                <field name="name"/>
+                                <field name="name" readonly="1"/>
                             </h1>
                         </div>
                         <group>
                             <group>
-                                <field name="code"/>
-                                <field name="description"/>
-                                <field name="partner_id"/>
+                                <group string="License Number">
+                                    <group colspan="6" col="6">
+                                        <field name="code1" nolabel="1"/>
+                                        <field name="code2" nolabel="1"/>
+                                        <field name="code3" nolabel="1"/>
+                                        <field name="code4" nolabel="1"/>
+                                        <field name="code5" nolabel="1"/>
+                                        <field name="code6" nolabel="1"/>
+                                    </group>
+                                </group>
                             </group>
                         </group>
+                        <group>
+                            <group>
+                                <field name="code"/>
+                                <field name="partner_id"/>
+                            </group>
+                            <group>
+                                <field name="model_id"/>
+                                <field name="production_year"/>
+                                <field name="capacity"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="notes" placeholder="Notes ..."/>
+                        </group>
+
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
@@ -77,8 +103,9 @@
                 <tree string="_tree">
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="description"/>
+                    <!--                    <field name="description"/>-->
                     <field name="partner_id"/>
+                    <field name="model_id"/>
                 </tree>
             </field>
         </record>
