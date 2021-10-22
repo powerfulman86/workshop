@@ -1,7 +1,7 @@
 <odoo>
     <data>
         <!--workorder menu -->
-        <menuitem id="work_order_root" name="Work Order" action="work_order_action"/>
+        <menuitem id="work_order_root" name="Work Order"/>
         <menuitem id="work_order_calendar" name="Calendar" parent="work_order_root" sequence="1"
                   action="calendar.action_calendar_event"/>
         <menuitem id="work_order_sale" name="Sales" parent="work_order_root" sequence="3"/>
