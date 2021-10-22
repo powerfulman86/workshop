@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <menuitem id="work_order_menu"
-                  name="Work-Order"
-                  parent="work_order_root"
-                  action="work_order_action" sequence="2"/>
-
         <!-- Tags -->
         <record id="work_order_tags_search_view" model="ir.ui.view">
             <field name="name">Tags</field>
@@ -290,5 +285,10 @@
                 </p>
             </field>
         </record>
+
+        <menuitem id="work_order_menu"
+                  name="Work-Order"
+                  parent="work_order_root"
+                  action="work_order_action" sequence="2"/>
     </data>
 </odoo>
