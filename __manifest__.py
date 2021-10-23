@@ -9,9 +9,10 @@
     'version': '0.1',
     'depends': ['base', 'stock', 'sale'],
     'data': [
+        'security/security.xml',
+        'security/ir.model.access.csv',
         'data/data.xml',
         'data/sequence.xml',
-        'security/ir.model.access.csv',
         'views/menus.xml',
         'views/machine.xml',
         'views/product_brand_view.xml',

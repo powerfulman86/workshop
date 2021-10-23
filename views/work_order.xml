@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <menuitem id="work_order_root_menu"
+                  name="Work-Order"
+                  parent="work_order_root"
+                  sequence="2"/>
+
         <!-- Tags -->
         <record id="work_order_tags_search_view" model="ir.ui.view">
             <field name="name">Tags</field>
@@ -132,6 +137,103 @@
         <menuitem id="work_order_stage_menu" name="Stages" action="work_order_stage_action"
                   parent="work_order_configuration"/>
 
+        <!-- Work-Order inspect-->
+        <record id="work_order_inspect_view_search" model="ir.ui.view">
+            <field name="name">work_order_inspect_view_search</field>
+            <field name="model">work.order.inspect</field>
+            <field name="arch" type="xml">
+                <search string="Work-Order Inspect">
+                    <field name="name"/>
+                    <field name="user_id"/>
+                    <field name="partner_id" operator="child_of"/>
+                    <field name="machine_id"/>
+                    <field name="state"/>
+                    <filter string="My inspect" name="my_tasks" domain="[('user_id', '=', uid)]"/>
+                    <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="State" name="stage" context="{'group_by': 'state'}"/>
+                        <filter string="Assigned to" name="user" context="{'group_by': 'user_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="work_order_inspect_tree" model="ir.ui.view">
+            <field name="name">work_order_inspect_view_tree</field>
+            <field name="model">work.order.inspect</field>
+            <field name="arch" type="xml">
+                <tree string="Work-Order Inspect">
+                    <field name="name"/>
+                    <field name="inspect_date"/>
+                    <field name="work_order_id"/>
+                    <field name="machine_id"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="work_order_inspect_form" model="ir.ui.view">
+            <field name="name">work_order_inspect_view_form</field>
+            <field name="model">work.order.inspect</field>
+            <field name="arch" type="xml">
+                <form string="Work-Order Inspect">
+                    <header>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h3>
+                                <field name="name" readonly="1"/>
+                            </h3>
+                        </div>
+                         <group>
+                            <group>
+                                <field name="work_order_id"/>
+                                <field name="partner_id"/>
+                                <field name="machine_id"/>
+                            </group>
+                            <group>
+                                <field name="inspect_date"/>
+                                <field name="date_assign"/>
+                                <field name="user_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Description">
+                                <field name="description"/>
+                            </page>
+                        </notebook>
+
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="work_order_inspect_action" model="ir.actions.act_window">
+            <field name="name">Work-Order Inspect</field>
+            <field name="res_model">work.order.inspect</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new Work Order Inspect
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="work_order_inspect_menu"
+                  name="Inspection"
+                  parent="work_order_root_menu"
+                  action="work_order_inspect_action" sequence="2"/>
+
         <!-- Work-Order -->
         <record id="work_order_view_search" model="ir.ui.view">
             <field name="name">work_order_view_search</field>
@@ -148,7 +250,6 @@
                     <group expand="0" string="Group By">
                         <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
                         <filter string="Assigned to" name="user" context="{'group_by': 'user_id'}"/>
-                        <filter string="Creation Date" name="group_create_date" context="{'group_by': 'create_date'}"/>
                     </group>
                 </search>
             </field>
@@ -160,6 +261,7 @@
             <field name="arch" type="xml">
                 <tree string="work_order_tree">
                     <field name="name"/>
+                    <field name="order_date"/>
                     <field name="machine_id"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
@@ -178,6 +280,13 @@
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet string="Work-Order">
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_inspect" type="object" class="oe_stat_button"
+                                    icon="fa-pencil-square-o">
+                                <field name="order_inspect_count" widget="statinfo" string="Inspections"/>
+                            </button>
+                        </div>
+
                         <div class="oe_title">
                             <h3>
                                 <field name="name" readonly="1"/>
@@ -189,12 +298,20 @@
                                 <field name="partner_id"/>
                                 <field name="machine_id"/>
                                 <field name="user_id"/>
+                                <field name="date_assign"/>
                             </group>
                             <group>
                                 <field name="priority" widget="priority"/>
                                 <field name="tag_ids" widget="many2many_tags"/>
+                                <field name="order_date"/>
+                                <field name="date_end"/>
                             </group>
                         </group>
+                        <notebook>
+                            <page string="Description">
+                                <field name="description"/>
+                            </page>
+                        </notebook>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
@@ -256,8 +373,8 @@
                                         </div>
                                         <div class="oe_kanban_bottom_right">
                                             <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)"
-                                             t-att-title="record.user_id.value" t-att-alt="record.user_id.value"
-                                             class="oe_kanban_avatar"/>
+                                                 t-att-title="record.user_id.value" t-att-alt="record.user_id.value"
+                                                 class="oe_kanban_avatar"/>
                                         </div>
                                     </div>
                                 </div>
@@ -288,7 +405,7 @@
 
         <menuitem id="work_order_menu"
                   name="Work-Order"
-                  parent="work_order_root"
+                  parent="work_order_root_menu"
                   action="work_order_action" sequence="2"/>
     </data>
 </odoo>

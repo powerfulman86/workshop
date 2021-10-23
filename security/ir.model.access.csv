@@ -5,3 +5,4 @@ access_res_machine,res_machine,model_res_machine,,1,1,1,1
 access_work_order,work_order,model_work_order,,1,1,1,1
 access_work_order_stage,work_order_stage,model_work_order_stage,,1,1,1,1
 access_work_order_tags,access_work_order_tags,model_work_order_tags,base.group_user,1,1,1,1
+access_work_order_inspect,access_work_order_inspect,model_work_order_inspect,base.group_user,1,1,1,1
