@@ -13,19 +13,19 @@ class ResMachine(models.Model):
     name = fields.Char('Name', required=True, compute="_get_license_number")
     code = fields.Char('Chase Number')
     model_id = fields.Many2one('product.model')
-    production_year = fields.Integer(string="Production Year", required=False, digits=4)
+    production_year = fields.Char(string="Production Year", size=4, required=True)
     capacity = fields.Integer(string="Capacity", required=False, )
 
     image = fields.Binary(string="Image", )
-    partner_id = fields.Many2one('res.partner', )
+    partner_id = fields.Many2one('res.partner', string="Customer",required=True)
     notes = fields.Text(string="Notes", required=False, )
 
-    code1 = fields.Char(string="code1", required=False, size=1)
-    code2 = fields.Char(string="code2", required=False, size=1)
-    code3 = fields.Char(string="code3", required=False, size=1)
-    code4 = fields.Char(string="code4", required=False, size=1)
-    code5 = fields.Char(string="code5", required=False, size=1)
-    code6 = fields.Char(string="code6", required=False, size=1)
+    code1 = fields.Char(string="code1", required=True, size=1)
+    code2 = fields.Char(string="code2", required=True, size=1)
+    code3 = fields.Char(string="code3", required=True, size=1)
+    code4 = fields.Char(string="code4", required=True, size=1)
+    code5 = fields.Char(string="code5", required=True, size=1)
+    code6 = fields.Char(string="code6", required=True, size=1)
 
     @api.depends('code1', 'code2', 'code3', 'code4', 'code5', 'code6')
     def _get_license_number(self):
@@ -46,4 +46,3 @@ class ResMachine(models.Model):
         for rec in self:
             if not rec.production_year.isdigit():
                 raise ValidationError(_("Production Year Must Be Digits"))
-

@@ -11,7 +11,7 @@
             <field name="name">Tags</field>
             <field name="model">work.order.tags</field>
             <field name="arch" type="xml">
-                <search string="Issue Version">
+                <search string="Tags">
                     <field name="name"/>
                 </search>
             </field>
