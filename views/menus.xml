@@ -29,7 +29,7 @@
         <!--        <menuitem id="menu_products" action="sale.product_template_action" parent="work_order_sale" sequence="2"/>-->
         <menuitem id="sale_customers" name="Customers" parent="work_order_sale" sequence="2"
                   action="account.res_partner_action_customer"/>
-        <menuitem id="sale_payment" name="Sales Orders Payment" parent="work_order_sale" sequence="3"
+        <menuitem id="sale_payment" name="Orders Payment" parent="work_order_sale" sequence="3"
                   action="account.action_account_payments"/>
 
         <!--sales-->
@@ -42,7 +42,7 @@
         <!--                  sequence="2"/>-->
         <menuitem id="retail_vendor" name="Vendors" parent="work_order_purchase" sequence="2"
                   action="account.res_partner_action_supplier"/>
-        <menuitem id="purchase_payment" name="Purchase Orders Payment" parent="work_order_purchase" sequence="3"
+        <menuitem id="purchase_payment" name="Orders Payment" parent="work_order_purchase" sequence="3"
                   action="account.action_account_payments_payable"/>
 
         <!--purchase-->
