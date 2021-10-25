@@ -7,7 +7,7 @@
     'website': "http://www.cubicit-eg.com",
     'category': 'others',
     'version': '0.1',
-    'depends': ['base', 'stock', 'sale'],
+    'depends': ['base', 'stock', 'sale', 'calendar'],
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',

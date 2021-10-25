@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from . import menu
 from . import res_partner
 from . import res_machine
 from . import product_model
