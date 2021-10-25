@@ -24,7 +24,7 @@
                 <form string="Tags">
                     <sheet>
                         <group>
-                            <field name="name"/>
+                            <field name="name" placeholder="e.g. Turbo"/>
                         </group>
                     </sheet>
                 </form>
@@ -62,12 +62,12 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="name"/>
+                                <field name="name" placeholder="e.g. Draft"/>
                                 <field name="sequence"/>
                             </group>
                         </group>
                         <group>
-                            <field name="description"/>
+                            <field name="description" placeholder="e.g. Draft Status"/>
                         </group>
                     </sheet>
                 </form>
@@ -188,7 +188,7 @@
                                 <field name="name" readonly="1"/>
                             </h3>
                         </div>
-                         <group>
+                        <group>
                             <group>
                                 <field name="work_order_id"/>
                                 <field name="partner_id"/>
@@ -277,12 +277,18 @@
             <field name="arch" type="xml">
                 <form string="work_order_form">
                     <header>
+                        <button class="oe_highlight" name="inspection_receive" type="object"
+                                string="Receive Inspection"/>
+                        <button class="oe_highlight" name="inspection_technical" type="object"
+                                string="Technical Inspection"/>
+
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet string="Work-Order">
                         <div class="oe_button_box" name="button_box">
                             <button name="action_view_inspect" type="object" class="oe_stat_button"
-                                    icon="fa-pencil-square-o">
+                                    icon="fa-pencil-square-o"
+                                    attrs="{'invisible': [('order_inspect_count', '!=', '0')]}">
                                 <field name="order_inspect_count" widget="statinfo" string="Inspections"/>
                             </button>
                         </div>
@@ -297,6 +303,7 @@
                             <group>
                                 <field name="partner_id"/>
                                 <field name="machine_id"/>
+                                <field name="machine_kilometer"/>
                                 <field name="user_id"/>
                                 <field name="date_assign"/>
                             </group>

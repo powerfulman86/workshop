@@ -72,9 +72,10 @@ class WorkOrder(models.Model):
                                  help="Creation date of draft/sent Work orders,\nConfirmation date of confirmed orders.")
     date_end = fields.Datetime(string='Ending Date', index=True, copy=False, readonly=True)
     date_assign = fields.Datetime(string='Assigning Date', index=True, copy=False, readonly=True)
-    description = fields.Text(translate=True)
+    description = fields.Html('Description', help='Description')
     order_inspect = fields.One2many('work.order.inspect', 'work_order_id', string="Work-Order Inspect")
     order_inspect_count = fields.Integer('Inspect Count', compute="_compute_inspect_count")
+    machine_kilometer = fields.Integer(string="Machine Kilometer", required=False, )
 
     @api.depends('order_inspect')
     def _compute_inspect_count(self):
@@ -149,13 +150,14 @@ class WorkOrderInspect(models.Model):
     machine_id = fields.Many2one('res.machine', string='Machine', auto_join=True, tracking=True, required=True)
     user_id = fields.Many2one('res.users', string='Assigned to', default=lambda self: self.env.uid, index=True,
                               tracking=True)
-    description = fields.Text(translate=True)
+    description = fields.Html('Description', help='Description')
     state = fields.Selection(AVAILABLE_STATE, string='State', index=True, default=AVAILABLE_STATE[0][0],
                              tracking=True, )
     work_order_id = fields.Many2one("work.order", string="Work-Order", required=True, )
     inspect_date = fields.Datetime(string='Inspect Date', required=True, readonly=True, index=True, copy=False,
                                    default=fields.Datetime.now, help="Creation date of Inspect Work orders.")
     date_assign = fields.Datetime(string='Assigning Date', index=True, copy=False, readonly=True)
+    inspect_type = fields.Selection(string="Type", selection=[('1', 'receive'), ('2', 'technical'), ], required=False, )
 
     def action_process(self):
         self.state = 'process'
@@ -171,6 +173,12 @@ class WorkOrderInspect(models.Model):
             if rec.state != 'draft':
                 raise UserError(_('You can not delete a Sugar Entry Which Is Not In Draft State.'))
         return super(WorkOrderInspect, self).unlink()
+
+    def inspection_technical(self):
+        return
+
+    def inspection_receive(self):
+        return
 
     @api.model
     def create(self, values):

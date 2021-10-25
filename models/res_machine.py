@@ -12,12 +12,23 @@ class ResMachine(models.Model):
 
     name = fields.Char('Name', required=True, compute="_get_license_number")
     code = fields.Char('Chase Number')
+    engine_number = fields.Char('Engine Number')
+    machine_colour = fields.Char(string="Colour", required=False, )
     model_id = fields.Many2one('product.model')
+    brand_id = fields.Many2one('product.brand', string='Brand', help='Select a brand for this Machine')
     production_year = fields.Char(string="Production Year", size=4, required=True)
     capacity = fields.Integer(string="Capacity", required=False, )
+    transmission = fields.Selection([('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission',
+                                    help='Transmission Used by the vehicle')
+    fuel_type = fields.Selection([
+        ('gasoline', 'Gasoline'),
+        ('diesel', 'Diesel'),
+        ('electric', 'Electric'),
+        ('hybrid', 'Hybrid')
+    ], 'Fuel Type', help='Fuel Used by the vehicle')
 
     image = fields.Binary(string="Image", )
-    partner_id = fields.Many2one('res.partner', string="Customer",required=True)
+    partner_id = fields.Many2one('res.partner', string="Customer", required=True)
     notes = fields.Text(string="Notes", required=False, )
 
     code1 = fields.Char(string="code1", required=True, size=1)

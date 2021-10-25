@@ -5,13 +5,15 @@
             <field name="name">res_machine_view_search</field>
             <field name="model">res.machine</field>
             <field name="arch" type="xml">
-                <search string="Work-Order Inspect">
+                <search string="Machine Search">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="production_year"/>
+                    <field name="brand_id"/>
                     <field name="model_id"/>
                     <group expand="0" string="Group By">
+                        <filter string="Brand" name="brand" context="{'group_by': 'brand_id'}"/>
                         <filter string="Model" name="Model" context="{'group_by': 'model_id'}"/>
                         <filter string="Production Year" name="production_year" context="{'group_by': 'production_year'}"/>
                     </group>
@@ -91,13 +93,18 @@
                         </group>
                         <group>
                             <group>
-                                <field name="code"/>
                                 <field name="partner_id"/>
-                            </group>
-                            <group>
+                                <field name="brand_id"/>
                                 <field name="model_id"/>
                                 <field name="production_year"/>
+                                <field name="machine_colour"/>
+                            </group>
+                            <group>
+                                <field name="code"/>
+                                <field name="engine_number"/>
                                 <field name="capacity"/>
+                                <field name="transmission"/>
+                                <field name="fuel_type"/>
                             </group>
                         </group>
                         <group>
@@ -121,8 +128,8 @@
                 <tree string="_tree">
                     <field name="name"/>
                     <field name="code"/>
-                    <!--                    <field name="description"/>-->
                     <field name="partner_id"/>
+                    <field name="brand_id"/>
                     <field name="model_id"/>
                 </tree>
             </field>
@@ -132,7 +139,7 @@
             <field name="name">Machine</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.machine</field>
-            <field name="view_mode">kanban,tree,pivot,graph,form</field>
+            <field name="view_mode">kanban,tree,pivot,form</field>
         </record>
 
         <menuitem id="machine_menu" name="Machine" action="machine_action" parent="work_order_settings"/>

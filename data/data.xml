@@ -4,42 +4,27 @@
         <!-- Stages -->
         <record id="work_order_stage_1" model="work.order.stage">
             <field name="sequence">1</field>
-            <field name="name">New</field>
+            <field name="name">Draft</field>
         </record>
 
         <record id="work_order_stage_2" model="work.order.stage">
             <field name="sequence">2</field>
-            <field name="name">Review</field>
+            <field name="name">Open</field>
         </record>
 
         <record id="work_order_stage_3" model="work.order.stage">
             <field name="sequence">3</field>
-            <field name="name">Approved</field>
-        </record>
-
-        <record id="work_order_stage_4" model="work.order.stage">
-            <field name="sequence">5</field>
-            <field name="name">In Progress</field>
+            <field name="name">Pending</field>
         </record>
 
         <record id="work_order_stage_4" model="work.order.stage">
             <field name="sequence">4</field>
-            <field name="name">Committed</field>
+            <field name="name">Billing</field>
         </record>
 
         <record id="work_order_stage_5" model="work.order.stage">
             <field name="sequence">5</field>
-            <field name="name">Billing</field>
-        </record>
-
-        <record id="work_order_stage_6" model="work.order.stage">
-            <field name="sequence">6</field>
-            <field name="name">Closed</field>
-        </record>
-
-        <record id="work_order_stage_7" model="work.order.stage">
-            <field name="sequence">7</field>
-            <field name="name">PostPone</field>
+            <field name="name">Close</field>
         </record>
     </data>
 </odoo>
