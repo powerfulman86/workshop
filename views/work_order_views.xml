@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Tags -->
+        <record id="work_order_tags_search_view" model="ir.ui.view">
+            <field name="name">Tags</field>
+            <field name="model">work.order.tags</field>
+            <field name="arch" type="xml">
+                <search string="Tags">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="work_order_tags_form_view" model="ir.ui.view">
+            <field name="name">Tags</field>
+            <field name="model">work.order.tags</field>
+            <field name="arch" type="xml">
+                <form string="Tags">
+                    <sheet>
+                        <group>
+                            <field name="name" placeholder="e.g. Turbo"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="work_order_tags_tree_view" model="ir.ui.view">
+            <field name="name">Tags</field>
+            <field name="model">work.order.tags</field>
+            <field name="arch" type="xml">
+                <tree string="Tags" editable="bottom">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="work_order_tags_action" model="ir.actions.act_window">
+            <field name="name">Tags</field>
+            <field name="res_model">work.order.tags</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new tag
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="work_order_tags_action" id="menu_work_order_tags_act" parent="work_order_configuration"/>
+
+        <!-- Work-Order Stages-->
+        <record id="work_order_stage_form" model="ir.ui.view">
+            <field name="name">work_order_stage_form</field>
+            <field name="model">work.order.stage</field>
+            <field name="arch" type="xml">
+                <form string="Work Order Stage">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" placeholder="e.g. Draft"/>
+                                <field name="sequence"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description" placeholder="e.g. Draft Status"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="work_order_stage_kanban" model="ir.ui.view">
+            <field name="name">work_order_stage_kanban</field>
+            <field name="model">work.order.stage</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="description"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <strong>
+                                            <t t-esc="record.name.value"/>
+                                        </strong>
+                                    </div>
+                                </div>
+                                <t t-if="record.description.value">
+                                    <hr class="mt8 mb8"/>
+                                    <t t-esc="record.description.value"/>
+                                </t>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="work_order_stage_tree" model="ir.ui.view">
+            <field name="name">work_order_stage_tree</field>
+            <field name="model">work.order.stage</field>
+            <field name="arch" type="xml">
+                <tree string="Work Order Stages">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="work_order_stage_action" model="ir.actions.act_window">
+            <field name="name">Work Order Stage</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">work.order.stage</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_id" ref="work_order_stage_tree"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new stage in the Work Order pipeline
+                </p>
+                <p>
+                    Define the steps that will be used in the Work Order from the
+                    creation of the task, up to the closing of the task or issue.
+                    You will use these stages in order to track the progress in
+                    solving a task or an issue.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="work_order_stage_menu" name="Stages" action="work_order_stage_action"
+                  parent="work_order_configuration"/>
+
+
+    </data>
+</odoo>

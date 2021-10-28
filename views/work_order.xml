@@ -6,234 +6,6 @@
                   parent="work_order_root"
                   sequence="2"/>
 
-        <!-- Tags -->
-        <record id="work_order_tags_search_view" model="ir.ui.view">
-            <field name="name">Tags</field>
-            <field name="model">work.order.tags</field>
-            <field name="arch" type="xml">
-                <search string="Tags">
-                    <field name="name"/>
-                </search>
-            </field>
-        </record>
-
-        <record id="work_order_tags_form_view" model="ir.ui.view">
-            <field name="name">Tags</field>
-            <field name="model">work.order.tags</field>
-            <field name="arch" type="xml">
-                <form string="Tags">
-                    <sheet>
-                        <group>
-                            <field name="name" placeholder="e.g. Turbo"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record id="work_order_tags_tree_view" model="ir.ui.view">
-            <field name="name">Tags</field>
-            <field name="model">work.order.tags</field>
-            <field name="arch" type="xml">
-                <tree string="Tags" editable="bottom">
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="work_order_tags_action" model="ir.actions.act_window">
-            <field name="name">Tags</field>
-            <field name="res_model">work.order.tags</field>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    Create a new tag
-                </p>
-            </field>
-        </record>
-
-        <menuitem action="work_order_tags_action" id="menu_work_order_tags_act" parent="work_order_configuration"/>
-
-        <!-- Work-Order Stages-->
-        <record id="work_order_stage_form" model="ir.ui.view">
-            <field name="name">work_order_stage_form</field>
-            <field name="model">work.order.stage</field>
-            <field name="arch" type="xml">
-                <form string="Work Order Stage">
-                    <sheet>
-                        <group>
-                            <group>
-                                <field name="name" placeholder="e.g. Draft"/>
-                                <field name="sequence"/>
-                            </group>
-                        </group>
-                        <group>
-                            <field name="description" placeholder="e.g. Draft Status"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record id="work_order_stage_kanban" model="ir.ui.view">
-            <field name="name">work_order_stage_kanban</field>
-            <field name="model">work.order.stage</field>
-            <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
-                    <field name="name"/>
-                    <field name="description"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_global_click">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <strong>
-                                            <t t-esc="record.name.value"/>
-                                        </strong>
-                                    </div>
-                                </div>
-                                <t t-if="record.description.value">
-                                    <hr class="mt8 mb8"/>
-                                    <t t-esc="record.description.value"/>
-                                </t>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
-            </field>
-        </record>
-
-        <record id="work_order_stage_tree" model="ir.ui.view">
-            <field name="name">work_order_stage_tree</field>
-            <field name="model">work.order.stage</field>
-            <field name="arch" type="xml">
-                <tree string="Work Order Stages">
-                    <field name="sequence" widget="handle"/>
-                    <field name="name"/>
-                    <field name="description"/>
-                    <field name="active"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="work_order_stage_action" model="ir.actions.act_window">
-            <field name="name">Work Order Stage</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">work.order.stage</field>
-            <field name="view_mode">tree,kanban,form</field>
-            <field name="view_id" ref="work_order_stage_tree"/>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    Create a new stage in the Work Order pipeline
-                </p>
-                <p>
-                    Define the steps that will be used in the Work Order from the
-                    creation of the task, up to the closing of the task or issue.
-                    You will use these stages in order to track the progress in
-                    solving a task or an issue.
-                </p>
-            </field>
-        </record>
-
-        <menuitem id="work_order_stage_menu" name="Stages" action="work_order_stage_action"
-                  parent="work_order_configuration"/>
-
-        <!-- Work-Order inspect-->
-        <record id="work_order_inspect_view_search" model="ir.ui.view">
-            <field name="name">work_order_inspect_view_search</field>
-            <field name="model">work.order.inspect</field>
-            <field name="arch" type="xml">
-                <search string="Work-Order Inspect">
-                    <field name="name"/>
-                    <field name="user_id"/>
-                    <field name="partner_id" operator="child_of"/>
-                    <field name="machine_id"/>
-                    <field name="state"/>
-                    <filter string="My inspect" name="my_tasks" domain="[('user_id', '=', uid)]"/>
-                    <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
-                    <group expand="0" string="Group By">
-                        <filter string="State" name="stage" context="{'group_by': 'state'}"/>
-                        <filter string="Assigned to" name="user" context="{'group_by': 'user_id'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-
-        <record id="work_order_inspect_tree" model="ir.ui.view">
-            <field name="name">work_order_inspect_view_tree</field>
-            <field name="model">work.order.inspect</field>
-            <field name="arch" type="xml">
-                <tree string="Work-Order Inspect">
-                    <field name="name"/>
-                    <field name="inspect_date"/>
-                    <field name="work_order_id"/>
-                    <field name="machine_id"/>
-                    <field name="partner_id"/>
-                    <field name="user_id"/>
-                    <field name="state"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="work_order_inspect_form" model="ir.ui.view">
-            <field name="name">work_order_inspect_view_form</field>
-            <field name="model">work.order.inspect</field>
-            <field name="arch" type="xml">
-                <form string="Work-Order Inspect">
-                    <header>
-                        <field name="state" widget="statusbar"/>
-                    </header>
-                    <sheet>
-                        <div class="oe_title">
-                            <h3>
-                                <field name="name" readonly="1"/>
-                            </h3>
-                        </div>
-                        <group>
-                            <group>
-                                <field name="work_order_id"/>
-                                <field name="partner_id"/>
-                                <field name="machine_id"/>
-                            </group>
-                            <group>
-                                <field name="inspect_date"/>
-                                <field name="date_assign"/>
-                                <field name="user_id"/>
-                            </group>
-                        </group>
-                        <notebook>
-                            <page string="Description">
-                                <field name="description"/>
-                            </page>
-                        </notebook>
-
-                    </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="activity_ids" widget="mail_activity"/>
-                        <field name="message_ids" widget="mail_thread"/>
-                    </div>
-                </form>
-            </field>
-        </record>
-
-        <record id="work_order_inspect_action" model="ir.actions.act_window">
-            <field name="name">Work-Order Inspect</field>
-            <field name="res_model">work.order.inspect</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{}</field>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    Create a new Work Order Inspect
-                </p>
-            </field>
-        </record>
-
-        <menuitem id="work_order_inspect_menu"
-                  name="Inspection"
-                  parent="work_order_root_menu"
-                  action="work_order_inspect_action" sequence="2"/>
-
         <!-- Work-Order -->
         <record id="work_order_view_search" model="ir.ui.view">
             <field name="name">work_order_view_search</field>
@@ -279,9 +51,6 @@
                     <header>
                         <button class="oe_highlight" name="inspection_receive" type="object"
                                 string="Receive Inspection"/>
-                        <button class="oe_highlight" name="inspection_technical" type="object"
-                                string="Technical Inspection"/>
-
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet string="Work-Order">
@@ -301,8 +70,9 @@
 
                         <group>
                             <group>
-                                <field name="partner_id"/>
+                                <field name="code"/>
                                 <field name="machine_id"/>
+                                <field name="partner_id"/>
                                 <field name="machine_kilometer"/>
                                 <field name="user_id"/>
                                 <field name="date_assign"/>
@@ -311,12 +81,73 @@
                                 <field name="priority" widget="priority"/>
                                 <field name="tag_ids" widget="many2many_tags"/>
                                 <field name="order_date"/>
+                                <field name="expected_date"/>
                                 <field name="date_end"/>
                             </group>
                         </group>
                         <notebook>
-                            <page string="Description">
-                                <field name="description"/>
+                            <page string="Customer Complain">
+                                <field name="order_complain" widget="section_and_note_one2many" mode="tree">
+                                    <tree string="Work-Order Complain" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="complain_notes"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Technical Diagnose">
+                                <notebook>
+                                    <page string="Diagnose">
+                                        <field name="order_diagnose" widget="section_and_note_one2many" mode="tree">
+                                            <tree string="Work-Order Diagnose" editable="bottom">
+                                                <field name="sequence" widget="handle"/>
+                                                <field name="user_id"/>
+                                                <field name="technical_notes"/>
+                                                <field name="state"/>
+                                            </tree>
+                                        </field>
+                                    </page>
+                                    <page string="Required Parts">
+                                        <field name="order_parts" widget="section_and_note_one2many" mode="tree">
+                                            <tree string="Work-Order Parts" editable="bottom">
+                                                <field name="sequence" widget="handle"/>
+                                                <field name="product_id" options="{'no_open': True}" force_save="1"
+                                                       domain="[('sale_ok', '=', True)]"
+                                                       widget="product_configurator"/>
+                                                <field name="product_template_id" string="Product" invisible="1"
+                                                       options="{'no_open': True}"
+                                                       domain="[('sale_ok', '=', True),]"
+                                                       widget="product_configurator"/>
+                                                <field name="product_qty"/>
+                                                <field name="price_unit"/>
+                                                <field name="user_id"/>
+                                                <field name="install_date"/>
+                                            </tree>
+                                        </field>
+                                    </page>
+                                    <page string="Services">
+                                        <field name="order_service" widget="section_and_note_one2many" mode="tree">
+                                            <tree string="Work-Order Parts" editable="bottom">
+                                                <field name="sequence" widget="handle"/>
+                                                <field name="product_id" options="{'no_open': True}" force_save="1"
+                                                       domain="[('sale_ok', '=', True)]"
+                                                       widget="product_configurator"/>
+                                                <field name="product_template_id" string="Product" invisible="1"
+                                                       options="{'no_open': True}"
+                                                       domain="[('sale_ok', '=', True),]"
+                                                       widget="product_configurator"/>
+                                                <field name="product_qty" invisible="1"/>
+                                                <field name="price_unit"/>
+                                                <field name="user_id"/>
+                                                <field name="user_id_revise"/>
+                                            </tree>
+                                        </field>
+                                    </page>
+                                </notebook>
+                            </page>
+
+                            <page string="Notes">
+                                <field name="order_notes"/>
                             </page>
                         </notebook>
                     </sheet>

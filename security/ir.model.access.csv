@@ -2,7 +2,13 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_product_brand,product_brand,model_product_brand,stock.group_stock_manager,1,1,1,1
 access_product_model,product_model,model_product_model,stock.group_stock_manager,1,1,1,1
 access_res_machine,res_machine,model_res_machine,,1,1,1,1
-access_work_order,work_order,model_work_order,,1,1,1,1
+
 access_work_order_stage,work_order_stage,model_work_order_stage,,1,1,1,1
 access_work_order_tags,access_work_order_tags,model_work_order_tags,base.group_user,1,1,1,1
+
+access_work_order,work_order,model_work_order,,1,1,1,1
 access_work_order_inspect,access_work_order_inspect,model_work_order_inspect,base.group_user,1,1,1,1
+access_work_order_complain,access_work_order_complain,model_work_order_complain,base.group_user,1,1,1,1
+access_work_order_diagnose,access_work_order_diagnose,model_work_order_diagnose,base.group_user,1,1,1,1
+access_work_order_service,access_work_order_service,model_work_order_service,base.group_user,1,1,1,1
+access_work_order_parts,access_work_order_parts,model_work_order_parts,base.group_user,1,1,1,1

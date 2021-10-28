@@ -2,17 +2,17 @@
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError
+from odoo.osv import expression
 
 
 class ResMachine(models.Model):
     _name = 'res.machine'
     _description = 'Machine'
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _rec_name = 'name'
 
-    name = fields.Char('Name', required=True, compute="_get_license_number")
-    code = fields.Char('Chase Number')
-    engine_number = fields.Char('Engine Number')
+    name = fields.Char('Plate number', required=True, compute="_get_license_number")
+    code = fields.Char('Chase Number', required=True, )
+    engine_number = fields.Char('Engine Number', required=True, )
     machine_colour = fields.Char(string="Colour", required=False, )
     model_id = fields.Many2one('product.model')
     brand_id = fields.Many2one('product.brand', string='Brand', help='Select a brand for this Machine')
@@ -28,7 +28,7 @@ class ResMachine(models.Model):
     ], 'Fuel Type', help='Fuel Used by the vehicle')
 
     image = fields.Binary(string="Image", )
-    partner_id = fields.Many2one('res.partner', string="Customer", required=True)
+    partner_id = fields.Many2one('res.partner', string="Owner", required=True)
     notes = fields.Text(string="Notes", required=False, )
 
     code1 = fields.Char(string="code1", required=True, size=1)
@@ -57,3 +57,20 @@ class ResMachine(models.Model):
         for rec in self:
             if not rec.production_year.isdigit():
                 raise ValidationError(_("Production Year Must Be Digits"))
+
+    def name_get(self):
+        res = []
+        for rec in self:
+            name = "[%s] - %s" % (rec.name, rec.code)
+            res += [(rec.id, name)]
+        return res
+
+    @api.model
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
+        if operator in ('ilike', 'like', '=', '=like', '=ilike'):
+            args = expression.AND([
+                args or [],
+                ['|', ('name', operator, name), ('code', operator, name)]
+            ])
+        return super(ResMachine, self)._name_search(name, args=args, operator=operator, limit=limit,
+                                                    name_get_uid=name_get_uid)

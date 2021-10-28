@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Work-Order inspect-->
+        <record id="work_order_inspect_view_search" model="ir.ui.view">
+            <field name="name">work_order_inspect_view_search</field>
+            <field name="model">work.order.inspect</field>
+            <field name="arch" type="xml">
+                <search string="Work-Order Inspect">
+                    <field name="name"/>
+                    <field name="user_id"/>
+                    <field name="partner_id" operator="child_of"/>
+                    <field name="machine_id"/>
+                    <field name="state"/>
+                    <filter string="My inspect" name="my_tasks" domain="[('user_id', '=', uid)]"/>
+                    <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="State" name="stage" context="{'group_by': 'state'}"/>
+                        <filter string="Assigned to" name="user" context="{'group_by': 'user_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="work_order_inspect_tree" model="ir.ui.view">
+            <field name="name">work_order_inspect_view_tree</field>
+            <field name="model">work.order.inspect</field>
+            <field name="arch" type="xml">
+                <tree string="Work-Order Inspect">
+                    <field name="name"/>
+                    <field name="inspect_date"/>
+                    <field name="work_order_id"/>
+                    <field name="machine_id"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="work_order_inspect_form" model="ir.ui.view">
+            <field name="name">work_order_inspect_view_form</field>
+            <field name="model">work.order.inspect</field>
+            <field name="arch" type="xml">
+                <form string="Work-Order Inspect">
+                    <header>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h3>
+                                <field name="name" readonly="1"/>
+                            </h3>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="work_order_id"/>
+                                <field name="partner_id"/>
+                                <field name="machine_id"/>
+                            </group>
+                            <group>
+                                <field name="inspect_date"/>
+                                <field name="date_assign"/>
+                                <field name="user_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Description">
+                                <field name="description"/>
+                            </page>
+                        </notebook>
+
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="work_order_inspect_action" model="ir.actions.act_window">
+            <field name="name">Work-Order Inspect</field>
+            <field name="res_model">work.order.inspect</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new Work Order Inspect
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="work_order_inspect_menu"
+                  name="Inspection"
+                  parent="work_order_root_menu"
+                  action="work_order_inspect_action" sequence="2"/>
+
+
+    </data>
+</odoo>
