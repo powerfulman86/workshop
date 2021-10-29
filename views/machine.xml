@@ -77,7 +77,7 @@
                                     icon="fa-wrench"
                                     context="{'xml_id':'work_order_action'}"
                                     help="show the Work-Orders for this vehicle">
-                                <field name="work_order_count" widget="statinfo" string="Services"/>
+                                <field name="work_order_count" widget="statinfo" string="Work-Orders"/>
                             </button>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
