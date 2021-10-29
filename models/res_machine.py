@@ -9,8 +9,9 @@ class ResMachine(models.Model):
     _name = 'res.machine'
     _description = 'Machine'
     _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'name asc, code asc'
 
-    name = fields.Char('Plate number', required=True, compute="_get_license_number")
+    name = fields.Char('Plate number', required=True, compute="_get_license_number", store=True)
     code = fields.Char('Chase Number', required=True, )
     engine_number = fields.Char('Engine Number', required=True, )
     machine_colour = fields.Char(string="Colour", required=False, )
@@ -20,6 +21,7 @@ class ResMachine(models.Model):
     capacity = fields.Integer(string="Capacity", required=False, )
     transmission = fields.Selection([('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission',
                                     help='Transmission Used by the vehicle')
+    active = fields.Boolean('Active', default=True, tracking=True)
     fuel_type = fields.Selection([
         ('gasoline', 'Gasoline'),
         ('diesel', 'Diesel'),
@@ -37,12 +39,32 @@ class ResMachine(models.Model):
     code4 = fields.Char(string="code4", required=True, size=1)
     code5 = fields.Char(string="code5", required=True, size=1)
     code6 = fields.Char(string="code6", required=True, size=1)
+    code7 = fields.Char(string="code7", size=1)
+    work_order_count = fields.Integer(compute="_compute_count_all", string='Work-orders')
 
-    @api.depends('code1', 'code2', 'code3', 'code4', 'code5', 'code6')
+    def _compute_count_all(self):
+        orders = self.env['work.order']
+        for record in self:
+            record.work_order_count = orders.search_count([('machine_id', '=', record.id)])
+
+    def action_open_orders(self):
+        """ This opens the xml view specified in xml_id for the current vehicle """
+        self.ensure_one()
+        xml_id = self.env.context.get('xml_id')
+        if xml_id:
+            res = self.env['ir.actions.act_window'].for_xml_id('workshop', xml_id)
+            res.update(
+                context=dict(self.env.context, default_vehicle_id=self.id, group_by=False),
+                domain=[('machine_id', '=', self.id)]
+            )
+            return res
+        return False
+
+    @api.depends('code1', 'code2', 'code3', 'code4', 'code5', 'code6', 'code7')
     def _get_license_number(self):
         for rec in self:
             rec.name = (rec.code1 or '') + (rec.code2 or '') + (rec.code3 or '') + (rec.code4 or '') + (
-                    rec.code5 or '') + (rec.code6 or '')
+                    rec.code5 or '') + (rec.code6 or '') + (rec.code7 or '')
 
     _sql_constraints = [
         (
@@ -67,10 +89,10 @@ class ResMachine(models.Model):
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        if operator in ('ilike', 'like', '=', '=like', '=ilike'):
-            args = expression.AND([
-                args or [],
-                ['|', ('name', operator, name), ('code', operator, name)]
-            ])
-        return super(ResMachine, self)._name_search(name, args=args, operator=operator, limit=limit,
-                                                    name_get_uid=name_get_uid)
+        args = args or []
+        if operator == 'ilike' and not (name or '').strip():
+            domain = []
+        else:
+            domain = ['|', ('name', operator, name), ('code', operator, name)]
+        rec = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
+        return models.lazy_name_get(self.browse(rec).with_user(name_get_uid))

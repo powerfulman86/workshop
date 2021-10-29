@@ -75,15 +75,15 @@ class WorkOrder(models.Model):
     priority = fields.Selection(AVAILABLE_PRIORITIES, string='Priority', index=True,
                                 default=AVAILABLE_PRIORITIES[0][0])
     tag_ids = fields.Many2many('work.order.tags', string='Tags')
-    order_date = fields.Date(string='Order Date', required=True, index=True, copy=False,
-                             default=fields.Datetime.now,
-                             help="Creation date of draft/sent Work orders,\nConfirmation date of confirmed orders.")
-    expected_date = fields.Date(string="Expected Date", default=fields.Datetime.now, required=False, )
-    date_end = fields.Date(string='Ending Date', index=True, copy=False)
+    order_date = fields.Datetime(string='Order Date', required=True, index=True, copy=False,
+                                 default=fields.Datetime.now,
+                                 help="Creation date of draft/sent Work orders,\nConfirmation date of confirmed orders.")
+    expected_date = fields.Datetime(string="Expected Date", default=fields.Datetime.now, required=False, )
+    date_end = fields.Datetime(string='Ending Date', index=True, copy=False)
     date_assign = fields.Datetime(string='Assigning Date', index=True, copy=False)
 
-    order_inspect = fields.One2many('work.order.inspect', 'work_order_id', string="Work-Order Inspect")
-    order_inspect_count = fields.Integer('Inspect Count', compute="_compute_inspect_count")
+    inspection_receive = fields.Boolean(string="Inspection Receive", default=False)
+    inspection_receive_count = fields.Integer(string="Inspection Count", compute="_compute_count_all", store=True)
     machine_kilometer = fields.Integer(string="Machine Kilometer", required=False, )
     order_parts = fields.One2many('work.order.parts', 'order_id', string='Order Parts', copy=True, auto_join=True)
     order_complain = fields.One2many('work.order.complain', 'order_id', string='Order Complain', copy=True,
@@ -93,16 +93,18 @@ class WorkOrder(models.Model):
     order_service = fields.One2many('work.order.service', 'order_id', string='Order Service', copy=True, auto_join=True)
     order_notes = fields.Html('Notes', help='Notes')
 
-    @api.depends('order_inspect')
-    def _compute_inspect_count(self):
-        for rec in self:
-            rec.order_inspect_count = len(rec.order_inspect.ids)
+    def _compute_count_all(self):
+        inspection = self.env['work.order.inspect']
+        for record in self:
+            record.inspection_receive_count = inspection.search_count([('work_order_id', '=', record.id)])
 
     @api.model
     def create(self, values):
         if values.get('user_id'):
             values['date_assign'] = fields.Datetime.now()
 
+        # if values.get('inspection_receive'):
+        #     self.create_inspection()
         # Stage change: Update date_end if folded stage and date_last_stage_update
         if values.get('stage_id'):
             values.update(self.update_date_end(values['stage_id']))
@@ -112,15 +114,28 @@ class WorkOrder(models.Model):
         if not res.stage_id:
             stage = self._get_default_stage_id()
             res.stage_id = stage
+
+        if res.inspection_receive:
+            inspection = self.env['work.order.inspect']
+            record = {
+                'work_order_id': res.id,
+                'partner_id': res.partner_id.id,
+                'machine_id': res.machine_id.id,
+                'inspect_date': res.order_date,
+            }
+            inspection.create(record)
         return res
 
     def action_view_inspect(self):
         self.ensure_one()
-        action = self.env.ref('workshop.work_order_inspect_action')
-        result = action.read()[0]
-        result['context'] = {'default_parent_id': self.id}
-        result['domain'] = "[('id', 'in', " + str(self.order_inspect.ids) + ")]"
-        return result
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Receive Inspection',
+            'view_mode': 'list,form',
+            'res_model': 'work.order.inspect',
+            'domain': [('work_order_id', '=', self.id)],
+            'context': {}
+        }
 
     def write(self, values):
         # user_id change: update date_assign
@@ -136,6 +151,20 @@ class WorkOrder(models.Model):
         now = self.stage_id.sequence
         if now < last:
             raise ValidationError(_("Must Proceed In Forward Steps !"))
+
+        # create inspection if not exist
+        if 'inspection_receive' in values:
+            if self.inspection_receive:
+                inspection = self.env['work.order.inspect'].search([('work_order_id', '=', self.id)])
+                if len(inspection.ids) == 0:
+                    inspection = self.env['work.order.inspect']
+                    record = {
+                        'work_order_id': self.id,
+                        'partner_id': self.partner_id.id,
+                        'machine_id': self.machine_id.id,
+                        'inspect_date': self.order_date,
+                    }
+                    inspection.create(record)
 
         return res
 
@@ -274,18 +303,19 @@ class WorkOrderInspect(models.Model):
     _order = "id desc"
 
     name = fields.Char('Name')
-    partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, tracking=True, required=True)
-    machine_id = fields.Many2one('res.machine', string='Machine', auto_join=True, tracking=True, required=True)
-    user_id = fields.Many2one('res.users', string='Assigned to', default=lambda self: self.env.uid, index=True,
-                              tracking=True)
+    work_order_id = fields.Many2one("work.order", string="Work-Order", required=True, )
+    partner_id = fields.Many2one('res.partner', string='Customer', tracking=True, )
+    machine_id = fields.Many2one('res.machine', string='Machine', tracking=True, )
+    user_id = fields.Many2one('res.users', string='Assigned to', default=lambda self: self.env.uid, index=True, )
     description = fields.Html('Description', help='Description')
     state = fields.Selection(AVAILABLE_STATE, string='State', index=True, default=AVAILABLE_STATE[0][0],
                              tracking=True, )
-    work_order_id = fields.Many2one("work.order", string="Work-Order", required=True, )
-    inspect_date = fields.Datetime(string='Inspect Date', required=True, readonly=True, index=True, copy=False,
+
+    inspect_date = fields.Datetime(string='Inspect Date', required=True, index=True, copy=False,
                                    default=fields.Datetime.now, help="Creation date of Inspect Work orders.")
-    date_assign = fields.Datetime(string='Assigning Date', index=True, copy=False, readonly=True)
-    inspect_type = fields.Selection(string="Type", selection=[('1', 'receive'), ('2', 'technical'), ], required=False, )
+    date_assign = fields.Datetime(string='Assigning Date', index=True, copy=False, )
+
+    # inspect_type = fields.Selection(string="Type", selection=[('1', 'receive'), ('2', 'technical'), ], required=False, )
 
     def action_process(self):
         self.state = 'process'

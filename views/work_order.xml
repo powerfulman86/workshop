@@ -49,16 +49,12 @@
             <field name="arch" type="xml">
                 <form string="work_order_form">
                     <header>
-                        <button class="oe_highlight" name="inspection_receive" type="object"
-                                string="Receive Inspection"/>
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet string="Work-Order">
                         <div class="oe_button_box" name="button_box">
                             <button name="action_view_inspect" type="object" class="oe_stat_button"
-                                    icon="fa-pencil-square-o"
-                                    attrs="{'invisible': [('order_inspect_count', '!=', '0')]}">
-                                <field name="order_inspect_count" widget="statinfo" string="Inspections"/>
+                                    icon="fa-pencil-square-o" string="Inspections">
                             </button>
                         </div>
 
@@ -78,11 +74,15 @@
                                 <field name="date_assign"/>
                             </group>
                             <group>
-                                <field name="priority" widget="priority"/>
-                                <field name="tag_ids" widget="many2many_tags"/>
                                 <field name="order_date"/>
                                 <field name="expected_date"/>
                                 <field name="date_end"/>
+                                <field name="inspection_receive"
+                                       attrs="{'readonly':[('inspection_receive_count','!=',0)]}"/>
+                                <field name="priority" widget="priority"/>
+                                <field name="tag_ids" widget="many2many_tags"/>
+                                <field name="inspection_receive_count"/>
+
                             </group>
                         </group>
                         <notebook>
@@ -187,22 +187,27 @@
                     <field name="name"/>
                     <field name="user_id"/>
                     <field name="partner_id"/>
+                    <field name="order_date"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="o_kanban_project_phases oe_kanban_global_click"
-                                 t-attf-style="height:100px;">
+                            <div class="oe_kanban_global_click">
                                 <div class="oe_kanban_details">
+                                    <strong class="o_kanban_record_title">
+                                        <h4 class="mt0 mb0">
+                                            <field name="machine_id"/>
+                                        </h4>
+                                    </strong>
                                     <div class="o_kanban_record_top">
                                         <h4 class="mt0 mb0">
-                                            <field name="name"/>
+                                            <field name="partner_id"/>
                                         </h4>
                                     </div>
                                     <div class="o_kanban_record_body">
                                         <strong class="o_kanban_record_title">
-                                            <field name="machine_id"/>
+                                            <field name="name"/>
                                         </strong>
                                         <p class="o_kanban_record_title">
-                                            <field name="partner_id"/>
+                                            <field name="order_date"/>
                                         </p>
                                     </div>
                                     <div class="o_kanban_record_bottom" t-if="!selection_mode">

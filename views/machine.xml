@@ -15,7 +15,8 @@
                     <group expand="0" string="Group By">
                         <filter string="Brand" name="brand" context="{'group_by': 'brand_id'}"/>
                         <filter string="Model" name="Model" context="{'group_by': 'model_id'}"/>
-                        <filter string="Production Year" name="production_year" context="{'group_by': 'production_year'}"/>
+                        <filter string="Production Year" name="production_year"
+                                context="{'group_by': 'production_year'}"/>
                     </group>
                 </search>
             </field>
@@ -69,6 +70,17 @@
             <field name="arch" type="xml">
                 <form string="machine_form">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_open_orders"
+                                    type="object"
+                                    class="oe_stat_button"
+                                    icon="fa-wrench"
+                                    context="{'xml_id':'work_order_action'}"
+                                    help="show the Work-Orders for this vehicle">
+                                <field name="work_order_count" widget="statinfo" string="Services"/>
+                            </button>
+                        </div>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="image" widget="image" class="oe_avatar"/>
 
                         <div class="oe_title">
@@ -80,19 +92,21 @@
                         <group>
                             <group>
                                 <group string="License Number">
-                                    <group colspan="6" col="6">
+                                    <group colspan="7" col="7">
                                         <field name="code1" nolabel="1"/>
                                         <field name="code2" nolabel="1"/>
                                         <field name="code3" nolabel="1"/>
                                         <field name="code4" nolabel="1"/>
                                         <field name="code5" nolabel="1"/>
                                         <field name="code6" nolabel="1"/>
+                                        <field name="code7" nolabel="1"/>
                                     </group>
                                 </group>
                             </group>
                         </group>
                         <group>
                             <group>
+                                <field name="active" invisible="1"/>
                                 <field name="partner_id"/>
                                 <field name="brand_id"/>
                                 <field name="model_id"/>
