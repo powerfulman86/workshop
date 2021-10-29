@@ -77,12 +77,9 @@
                                 <field name="order_date"/>
                                 <field name="expected_date"/>
                                 <field name="date_end"/>
-                                <field name="inspection_receive"
-                                       attrs="{'readonly':[('inspection_receive_count','!=',0)]}"/>
+                                <field name="inspection_receive"/>
                                 <field name="priority" widget="priority"/>
                                 <field name="tag_ids" widget="many2many_tags"/>
-                                <field name="inspection_receive_count"/>
-
                             </group>
                         </group>
                         <notebook>

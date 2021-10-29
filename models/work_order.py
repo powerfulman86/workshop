@@ -93,10 +93,10 @@ class WorkOrder(models.Model):
     order_service = fields.One2many('work.order.service', 'order_id', string='Order Service', copy=True, auto_join=True)
     order_notes = fields.Html('Notes', help='Notes')
 
-    def _compute_count_all(self):
-        inspection = self.env['work.order.inspect']
-        for record in self:
-            record.inspection_receive_count = inspection.search_count([('work_order_id', '=', record.id)])
+    # def _compute_count_all(self):
+    #     inspection = self.env['work.order.inspect']
+    #     for record in self:
+    #         record.inspection_receive_count = inspection.search_count([('work_order_id', '=', record.id)])
 
     @api.model
     def create(self, values):
@@ -128,14 +128,15 @@ class WorkOrder(models.Model):
 
     def action_view_inspect(self):
         self.ensure_one()
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Receive Inspection',
-            'view_mode': 'list,form',
-            'res_model': 'work.order.inspect',
-            'domain': [('work_order_id', '=', self.id)],
-            'context': {}
-        }
+        inspection_id = self.env['work.order.inspect'].search([('work_order_id', '=', self.id)])
+        if len(inspection_id.ids) != 0:
+            return {
+                "type": "ir.actions.act_window",
+                'res_model': 'work.order.inspect',
+                "views": [[False, "form"]],
+                "res_id": inspection_id.id,
+                "context": {"create": False},
+            }
 
     def write(self, values):
         # user_id change: update date_assign

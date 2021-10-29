@@ -44,7 +44,7 @@
             <field name="arch" type="xml">
                 <form string="Work-Order Inspect">
                     <header>
-                        <field name="state" widget="statusbar"/>
+                        <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
