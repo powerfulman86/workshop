@@ -93,6 +93,29 @@ class WorkOrder(models.Model):
     order_service = fields.One2many('work.order.service', 'order_id', string='Order Service', copy=True, auto_join=True)
     order_notes = fields.Html('Notes', help='Notes')
 
+    sale_ids = fields.One2many('sale.order', 'work_id')
+    invoice_ids = fields.One2many('account.move', 'work_id')
+    sales_count = fields.Integer('Sales Count', compute="compute_counts")
+    invoice_count = fields.Integer('Invoice Count', compute="compute_counts")
+
+    def action_view_sale(self):
+        action = self.env.ref('sale.action_orders').read()[0]
+        action['domain'] = [('id', '=', self.sale_ids.ids)]
+        action['context'] = {'default_work_id': self.id}
+        return action
+
+    def action_view_invoice(self):
+        action = self.env.ref('account.action_move_journal_line').read()[0]
+        action['domain'] = [('id', '=', self.invoice_ids.ids)]
+        action['context'] = {'default_work_id': self.id}
+        return action
+
+    @api.depends('sale_ids', 'invoice_ids')
+    def compute_counts(self):
+        for rec in self:
+            rec.sales_count = len(rec.sale_ids.ids)
+            rec.invoice_count = len(rec.invoice_ids.ids)
+
     # def _compute_count_all(self):
     #     inspection = self.env['work.order.inspect']
     #     for record in self:

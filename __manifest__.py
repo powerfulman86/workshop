@@ -7,7 +7,7 @@
     'website': "http://www.cubicit-eg.com",
     'category': 'others',
     'version': '0.1',
-    'depends': ['base', 'stock', 'sale', 'calendar'],
+    'depends': ['base', 'sale', 'purchase', 'calendar', 'stock', 'contacts'],
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
@@ -22,6 +22,7 @@
         'views/work_order_views.xml',
         'views/order_inspect.xml',
         'views/sale_order.xml',
+        'report/workshop.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

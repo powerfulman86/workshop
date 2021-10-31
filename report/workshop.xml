@@ -1,0 +1,172 @@
+<odoo>
+    <data>
+
+        <template id="workshop_report_template">
+            <t t-call="web.html_container">
+                <t t-call="web.internal_layout">
+                    <t t-foreach="docs" t-as="doc">
+                        <div class="page">
+                            <div>
+                                <center>
+                                    <h2>Work Shop
+                                        <span t-esc="doc.name"/>
+                                    </h2>
+                                </center>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div>
+                                        <string>code</string>
+                                        <span t-esc="doc.code"/>
+                                    </div>
+                                    <div>
+                                        <string>Plate Number</string>
+                                        <span t-esc="doc.machine_id.name"/>
+                                    </div>
+                                    <div>
+                                        <string>Customer</string>
+                                        <span t-esc="doc.partner_id.name"/>
+                                    </div>
+                                    <div>
+                                        <string>Machine Kilometer</string>
+                                        <span t-esc="doc.machine_kilometer"/>
+                                    </div>
+                                    <div>
+                                        <string>Assigned to</string>
+                                        <span t-esc="doc.user_id.name"/>
+                                    </div>
+                                    <div>
+                                        <string>Assigning Date</string>
+                                        <span t-esc="doc.date_assign"/>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div>
+                                        <string>Order Date</string>
+                                        <span t-esc="doc.order_date"/>
+                                    </div>
+                                    <div>
+                                        <string>Expected Date</string>
+                                        <span t-esc="doc.expected_date"/>
+                                    </div>
+                                    <div>
+                                        <string>Ending Date</string>
+                                        <span t-esc="doc.date_end"/>
+                                    </div>
+                                    <div>
+                                        <string>Tags</string>
+                                        <t t-foreach="doc.tag_ids" t-as="tag">
+                                            <span t-esc="tag.name"/>,
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                            <div t-if="doc.order_complain" class="row" string="customer complain">
+                                <h3>customer complain</h3>
+                                <div>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th> Complain </th>
+                                                <th> State </th>
+                                            </tr>
+                                        </thead>
+                                        <t t-foreach="doc.order_complain" t-as="complain">
+                                            <tr>
+                                                <td><span t-esc="complain.complain_notes"/></td>
+                                                <td><span t-esc="complain.state"/></td>
+                                            </tr>
+                                        </t>
+                                    </table>
+                                </div>
+                            </div>
+                            <div t-if="doc.order_diagnose" class="row" string="Technical Diagnose">
+                                <h3>Technical Diagnose</h3>
+                                <h4>Diagnose</h4>
+                                <div>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th> Technical </th>
+                                                <th> Note </th>
+                                                <th> State </th>
+                                            </tr>
+                                        </thead>
+                                        <t t-foreach="doc.order_diagnose" t-as="diagnose">
+                                            <tr>
+                                                <td><span t-esc="diagnose.user_id.name"/></td>
+                                                <td><span t-esc="diagnose.technical_notes"/></td>
+                                                <td><span t-esc="diagnose.state"/></td>
+                                            </tr>
+                                        </t>
+                                    </table>
+                                </div>
+                            </div>
+                            <div  t-if="doc.order_parts" class="row" string="required parts">
+                                <h3>Required Parts</h3>
+                                <div>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th> Product </th>
+                                                <th> Quantity</th>
+                                                <th> Price Unit </th>
+                                                <th> Technical</th>
+                                                <th>Install Date</th>
+                                            </tr>
+                                        </thead>
+                                        <t t-foreach="doc.order_parts" t-as="order_part">
+                                            <tr>
+                                                <td><span t-esc="order_part.product_id.name"/></td>
+                                                <td><span t-esc="order_part.product_Qty"/></td>
+                                                <td><span t-esc="order_part.price_unit"/></td>
+                                                <td><span t-esc="order_part.user_id.name"/></td>
+                                                <td><span t-esc="service.install_date"/></td>
+                                            </tr>
+                                        </t>
+                                    </table>
+                                </div>
+                            </div>
+                            <div t-if="doc.order_service" class="row" string="Services">
+                                <h3>Services</h3>
+                                <div>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th> Product </th>
+                                                <th> Quantity </th>
+                                                <th> Unit Price </th>
+                                                <th> Technical </th>
+                                                <th> Install Date </th>
+                                            </tr>
+                                        </thead>
+                                        <t t-foreach="doc.order_service" t-as="service">
+                                            <tr>
+                                                <td><span t-esc="service.product_id.name"/></td>
+                                                <td><span t-esc="service.price_unit"/></td>
+                                                <td><span t-esc="service.user_id.name"/></td>
+                                                <td><span t-esc="service.user_id_revise.name"/></td>
+                                            </tr>
+                                        </t>
+                                    </table>
+                                </div>
+                            </div>
+                            <div t-if="doc.order_notes" class="row">
+                                <span t-esc="doc.order_notes" />
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+
+        <report id="workshop_report_id"
+                model="work.order"
+                report_type="qweb-pdf"
+                string="Work Order"
+                name="workshop.workshop_report_template"
+                file="workshop.workshop_report_template"
+        />
+    </data>
+</odoo>
