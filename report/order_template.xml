@@ -152,6 +152,34 @@
                         <div t-if="o.order_service">
                             <h4>Service</h4>
                             <table class="table table-sm o_main_table">
+                                <thead>
+                                    <tr>
+                                        <th name="th_service">
+                                            <strong>Service</strong>
+                                        </th>
+                                        <th name="th_user">
+                                            <strong>Responsible</strong>
+                                        </th>
+                                        <th name="th_revise">
+                                            <strong>Revision</strong>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.order_service" t-as="service">
+                                        <tr>
+                                            <td id="th_service">
+                                                <span t-field="service.product_id"/>
+                                            </td>
+                                            <td id="th_user">
+                                                <span t-field="service.user_id"/>
+                                            </td>
+                                            <td id="th_revise">
+                                                <span t-field="service.user_id_revise"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
                             </table>
                         </div>
                     </div>
