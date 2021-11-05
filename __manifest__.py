@@ -22,9 +22,7 @@
         'views/work_order_views.xml',
         'views/order_inspect.xml',
         'views/sale_order.xml',
-        'report/report_views.xml',
         'report/order_template.xml',
-        'report/workshop.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
