@@ -56,6 +56,14 @@
                             <button name="action_view_inspect" type="object" class="oe_stat_button"
                                     icon="fa-pencil-square-o" string="Inspections">
                             </button>
+                            <button name="action_view_sale" type="object" class="oe_stat_button"
+                                    icon="fa-pencil-square-o" string="Sales">
+                                <field name="sales_count" />
+                            </button>
+                            <button name="action_view_invoice" type="object" class="oe_stat_button"
+                                    icon="fa-pencil-square-o" string="Invoices">
+                                <field name="invoice_count" />
+                            </button>
                         </div>
 
                         <div class="oe_title">
