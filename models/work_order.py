@@ -273,8 +273,8 @@ class WorkOrderParts(models.Model):
     order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer', readonly=False)
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True,
                                  default=lambda self: self.env.company)
-    user_id = fields.Many2one('res.users', string='Technical', index=True, )
-    install_date = fields.Date(string="install_date", required=False, )
+    user_id = fields.Many2one('res.users', string='Technical', index=True, default=lambda self: self.env.uid,)
+    install_date = fields.Date(string="install_date", required=False, default=fields.Datetime.now,)
     price_unit = fields.Float('Unit Price', required=True, digits='Product Price', default=0.0)
     product_id = fields.Many2one(
         'product.product', string='Product',

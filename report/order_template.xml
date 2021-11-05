@@ -112,6 +112,40 @@
                         <div t-if="o.order_parts">
                             <h4>Required Parts</h4>
                             <table class="table table-sm o_main_table">
+                                <thead>
+                                    <tr>
+                                        <th name="th_product">
+                                            <strong>Product</strong>
+                                        </th>
+                                        <th name="th_qty">
+                                            <strong>Quantity</strong>
+                                        </th>
+                                        <th name="th_user">
+                                            <strong>Responsible</strong>
+                                        </th>
+                                        <th name="th_install_date">
+                                            <strong>Install Date</strong>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.order_parts" t-as="parts">
+                                        <tr>
+                                            <td id="th_product">
+                                                <span t-field="parts.product_id"/>
+                                            </td>
+                                            <td id="th_qty">
+                                                <span t-field="parts.product_qty"/>
+                                            </td>
+                                            <td id="th_user">
+                                                <span t-field="parts.user_id"/>
+                                            </td>
+                                            <td id="th_install_date">
+                                                <span t-field="parts.install_date"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
                             </table>
                         </div>
 
