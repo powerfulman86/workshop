@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_workorder_document">
+        <t t-call="web.external_layout">
+            <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
+            <div class="page">
+                <div class="oe_structure"/>
+                <h2>Work-Order #
+                    <span t-field="o.name"/>
+                </h2>
+
+                <div id="informations" class="row mt32 mb32">
+                    <div t-if="o.code" class="col-3 bm-2">
+                        <strong>Reference:</strong>
+                        <p t-field="o.code" class="m-0"/>
+                    </div>
+
+                    <div t-if="o.order_date" class="col-3 bm-2">
+                        <strong>Date:</strong>
+                        <p t-field="o.order_date" class="m-0"/>
+                    </div>
+
+                    <div t-if="o.date_end" class="col-3 bm-2">
+                        <strong>Delivery Date:</strong>
+                        <p t-field="o.date_end" class="m-0"/>
+                    </div>
+
+                    <div t-if="o.user_id" class="col-3 bm-2">
+                        <strong>Responsible:</strong>
+                        <p t-field="o.user_id" class="m-0"/>
+                    </div>
+                </div>
+                <div id="informations" class="row mt32 mb32">
+                    <div t-if="o.partner_id" class="col-3 bm-2">
+                        <strong>Customer:</strong>
+                        <p t-field="o.partner_id" class="m-0"/>
+                    </div>
+
+                    <div t-if="o.machine_id" class="col-3 bm-2">
+                        <strong>Vehicle:</strong>
+                        <p t-field="o.machine_id" class="m-0"/>
+                    </div>
+
+                    <div t-if="o.machine_kilometer" class="col-3 bm-2">
+                        <strong>Kilometers:</strong>
+                        <p t-field="o.machine_kilometer" class="m-0"/>
+                    </div>
+                </div>
+
+                <h4>Customer Complain</h4>
+                <table class="table table-sm o_main_table">
+                    <thead>
+                        <tr>
+                            <th name="th_complain">
+                                <strong>Description</strong>
+                            </th>
+                            <th name="th_status">
+                                <strong>Status</strong>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="o.order_complain" t-as="complain">
+                            <tr>
+                                <td id="td_complain">
+                                    <span t-field="complain.complain_notes"/>
+                                </td>
+                                <td id="td_state">
+                                    <span t-field="complain.state"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+
+                <div t-if="o.order_diagnose">
+                    <h4>Technical Diagnose</h4>
+                    <table class="table table-sm o_main_table">
+                        <thead>
+                            <tr>
+                                <th name="th_responsible">
+                                    <strong>Responsible</strong>
+                                </th>
+                                <th name="th_notes">
+                                    <strong>Notes</strong>
+                                </th>
+                                <th name="th_status">
+                                    <strong>Status</strong>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="o.order_diagnose" t-as="diagnose">
+                                <tr>
+                                    <td id="td_responsible">
+                                        <span t-field="diagnose.user_id"/>
+                                    </td>
+                                    <td id="td_notes">
+                                        <span t-field="diagnose.technical_notes"/>
+                                    </td>
+                                    <td id="td_state">
+                                        <span t-field="diagnose.state"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div t-if="o.order_parts">
+                    <h4>Required Parts</h4>
+                    <table class="table table-sm o_main_table">
+                    </table>
+                </div>
+
+                <div t-if="o.order_service">
+                    <h4>Service</h4>
+                    <table class="table table-sm o_main_table">
+                    </table>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_workorder">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="workshop.report_workorder_document" t-lang="o.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+</odoo>

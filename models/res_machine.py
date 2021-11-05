@@ -11,7 +11,7 @@ class ResMachine(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'name asc, code asc'
 
-    name = fields.Char('Plate number', required=True, compute="_get_license_number", store=True)
+    name = fields.Char('Plate number', compute="_get_license_number", store=True)
     code = fields.Char('Chase Number', required=True, )
     engine_number = fields.Char('Engine Number', required=True, )
     machine_colour = fields.Char(string="Colour", required=False, )
