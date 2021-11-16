@@ -97,6 +97,40 @@ class WorkOrder(models.Model):
     invoice_ids = fields.One2many('account.move', 'work_id')
     sales_count = fields.Integer('Sales Count', compute="compute_counts")
     invoice_count = fields.Integer('Invoice Count', compute="compute_counts")
+    sale_created = fields.Boolean()
+
+    def create_sale(self):
+        sale_id = self.env['sale.order'].create({
+            'partner_id' : self.partner_id.id,
+            'work_id' : self.id,
+            'note' : self.order_notes,
+        })
+
+        for line in self.order_parts:
+            self.env['sale.order.line'].create({
+                'order_id': sale_id.id,
+                'product_id': line.product_id.id,
+                'name': line.product_id.name ,
+                'product_uom_qty': line.product_qty,
+                'price_unit': line.price_unit,
+            })
+        for ln in self.order_service:
+            self.env['sale.order.line'].create({
+                'order_id': sale_id.id,
+                'product_id': ln.product_id.id,
+                'name': ln.product_id.name ,
+                'product_uom_qty': 1,
+                'price_unit': ln.price_unit,
+            })
+        sale_id.action_confirm()
+        for pick in sale_id.picking_ids:
+            for line in pick.move_ids_without_package:
+                line.quantity_done = line.product_uom_qty
+            pick.button_validate()
+        sale_id._create_invoices()
+        for inv in sale_id.invoice_ids:
+            inv.action_post()
+        self.sale_created = True
 
     def action_view_sale(self):
         action = self.env.ref('sale.action_orders').read()[0]

@@ -49,6 +49,9 @@
             <field name="arch" type="xml">
                 <form string="work_order_form">
                     <header>
+                        <field name="sale_created" invisible="1"/>
+                        <button name="create_sale" type="object" string="create sale order" class="oe_highlight"
+                        attrs="{'invisible':[('sale_created', '=', True)]}"/>
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet string="Work-Order">
