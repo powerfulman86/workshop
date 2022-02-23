@@ -15,7 +15,7 @@
         <record id="workshop_manager" model="res.groups">
             <field name="name">Administrator</field>
             <field name="category_id" ref="module_category_workshop"/>
-            <field name="implied_ids" eval="[(4, ref('workshop_user'))]"/>
+            <field name="implied_ids" eval="[(4, ref('workshop.workshop_user'))]"/>
         </record>
     </data>
 </odoo>
