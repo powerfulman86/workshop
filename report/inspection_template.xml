@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_inspection_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
+
+                    <div class="page">
+                        <div class="oe_structure"/>
+                        <h2>Inspection #
+                            <span t-field="o.name"/>
+                        </h2>
+
+                        <div id="informations" class="row mt32 mb32">
+                            <div class="col-3 bm-2">
+                                <strong>Reference:</strong>
+                                <p t-field="o.name" class="m-0"/>
+                            </div>
+
+                            <div class="col-3 bm-2">
+                                <strong>Date:</strong>
+                                <p t-field="o.inspect_date" class="m-0"/>
+                            </div>
+
+                            <div class="col-3 bm-2">
+                                <strong>Type:</strong>
+                                <p t-field="o.inspect_type" class="m-0"/>
+                            </div>
+
+                            <div class="col-3 bm-2">
+                                <strong>Responsible:</strong>
+                                <p t-field="o.user_id" class="m-0"/>
+                            </div>
+                        </div>
+
+                        <div id="informations" class="row mt32 mb32">
+                            <div class="col-3 bm-2">
+                                <strong>Customer:</strong>
+                                <p t-field="o.partner_id" class="m-0"/>
+                            </div>
+
+                            <div class="col-3 bm-2">
+                                <strong>Vehicle:</strong>
+                                <p t-field="o.machine_id" class="m-0"/>
+                            </div>
+                        </div>
+
+                        <h4>Inspection Details</h4>
+                        <table class="table table-sm o_main_table">
+                            <thead>
+                                <tr>
+                                    <th name="th_category">
+                                        <strong>Category</strong>
+                                    </th>
+                                    <th name="th_item">
+                                        <strong>Item</strong>
+                                    </th>
+                                    <th name="th_evaluation">
+                                        <strong>Evaluation</strong>
+                                    </th>
+                                    <th name="th_note">
+                                        <strong>Notes</strong>
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <t t-foreach="o.inspect_line" t-as="line">
+                                    <tr>
+                                        <td id="td_category">
+                                            <span t-field="line.inspect_category"/>
+                                        </td>
+                                        <td id="td_item">
+                                            <span t-field="line.inspect_item"/>
+                                        </td>
+                                        <td id="td_evaluation">
+                                            <span t-field="line.item_evaluation"/>
+                                        </td>
+                                        <td id="td_note">
+                                            <span t-field="line.note"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <report
+            string="WorkShop Inspection"
+            id="report_inspection"
+            model="work.order.inspect"
+            report_type="qweb-pdf"
+            name="workshop.report_inspection_document"
+            file="workshop.report_inspection_document"
+            print_report_name="'Inspection - %s' % (object.name)"
+    />
+</odoo>

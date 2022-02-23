@@ -7,8 +7,15 @@ access_work_order_stage,work_order_stage,model_work_order_stage,base.group_user,
 access_work_order_tags,access_work_order_tags,model_work_order_tags,base.group_user,1,1,1,1
 
 access_work_order,work_order,model_work_order,base.group_user,1,1,1,1
-access_work_order_inspect,access_work_order_inspect,model_work_order_inspect,base.group_user,1,1,1,1
 access_work_order_complain,access_work_order_complain,model_work_order_complain,base.group_user,1,1,1,1
 access_work_order_diagnose,access_work_order_diagnose,model_work_order_diagnose,base.group_user,1,1,1,1
 access_work_order_service,access_work_order_service,model_work_order_service,base.group_user,1,1,1,1
 access_work_order_parts,access_work_order_parts,model_work_order_parts,base.group_user,1,1,1,1
+
+access_inspect_category_manager,inspect_category_manager,model_inspect_category,workshop.workshop_manager,1,1,1,1
+access_inspect_items_manager,inspect_items_manager,model_inspect_items,workshop.workshop_manager,1,1,1,1
+
+access_inspect_category_user,inspect_category_user,model_inspect_category,workshop.workshop_user,1,0,0,0
+access_inspect_items_user,inspect_items_user,model_inspect_items,workshop.workshop_user,1,0,0,0
+access_work_order_inspect,access_work_order_inspect,model_work_order_inspect,workshop.workshop_user,1,1,1,1
+access_work_order_inspect_line,access_work_order_inspect_line,model_work_order_inspect_line,workshop.workshop_user,1,1,1,1

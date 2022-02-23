@@ -9,18 +9,22 @@
         <menuitem id="work_order_stock" name="Inventory" parent="work_order_root" sequence="5"/>
         <menuitem id="work_order_report" name="Reporting" parent="work_order_root" sequence="6"/>
         <menuitem id="work_order_settings" name="Configuration" sequence="99" parent="work_order_root"/>
-        <menuitem id="work_order_configuration" name="Work-Order" sequence="99" parent="work_order_settings"/>
 
         <!--configuration-->
-        <menuitem id="warehouse_menu" name="Warehouse" parent="work_order_settings" sequence="1"
+        <!-- This Menu Item Must have a parent -->
+        <menuitem id="workshop_warehouse_config" name="Warehoue" parent="work_order_settings" sequence="1"/>
+        <menuitem id="warehouse_menu" name="Warehouse" parent="workshop_warehouse_config" sequence="1"
                   action="stock.action_warehouse_form"/>
-        <menuitem id="product_category" name="Product Category" parent="work_order_settings" sequence="2"
+        <menuitem id="product_category" name="Product Category" parent="workshop_warehouse_config" sequence="2"
                   action="product.product_category_action_form"/>
-        <menuitem id="products" name="Products" parent="work_order_settings" sequence="3"
+        <menuitem id="products" name="Products" parent="workshop_warehouse_config" sequence="3"
                   action="stock.product_template_action_product"/>
-        <menuitem id="sale_pricelist" name="Sales PriceList" parent="work_order_settings" sequence="4"
+
+        <menuitem id="workshop_config" name="WorkShop" parent="work_order_settings" sequence="2"/>
+
+        <menuitem id="sale_pricelist" name="Sales PriceList" parent="work_order_settings" sequence="3"
                   action="product.product_pricelist_action2"/>
-        <menuitem id="vendor_pricelist" name="Vendor PriceList" parent="work_order_settings" sequence="5"
+        <menuitem id="vendor_pricelist" name="Vendor PriceList" parent="work_order_settings" sequence="4"
                   action="product.product_supplierinfo_type_action"/>
 
         <!--Workshop sales-->

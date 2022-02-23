@@ -8,4 +8,6 @@ from . import product_brand
 from . import ProductTemplate
 from . import work_order
 from . import sale_order
+from . import work_order_inspect
+
 

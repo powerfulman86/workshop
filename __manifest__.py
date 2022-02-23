@@ -23,6 +23,7 @@
         'views/order_inspect.xml',
         'views/sale_order.xml',
         'report/order_template.xml',
+        'report/inspection_template.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

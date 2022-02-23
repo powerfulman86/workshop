@@ -12,20 +12,6 @@
             </field>
         </record>
 
-        <record id="work_order_tags_form_view" model="ir.ui.view">
-            <field name="name">Tags</field>
-            <field name="model">work.order.tags</field>
-            <field name="arch" type="xml">
-                <form string="Tags">
-                    <sheet>
-                        <group>
-                            <field name="name" placeholder="e.g. Turbo"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
         <record id="work_order_tags_tree_view" model="ir.ui.view">
             <field name="name">Tags</field>
             <field name="model">work.order.tags</field>
@@ -39,6 +25,8 @@
         <record id="work_order_tags_action" model="ir.actions.act_window">
             <field name="name">Tags</field>
             <field name="res_model">work.order.tags</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Create a new tag
@@ -46,7 +34,7 @@
             </field>
         </record>
 
-        <menuitem action="work_order_tags_action" id="menu_work_order_tags_act" parent="work_order_configuration"/>
+        <menuitem action="work_order_tags_action" id="menu_work_order_tags_act" parent="workshop_config"/>
 
         <!-- Work-Order Stages-->
         <record id="work_order_stage_form" model="ir.ui.view">
@@ -130,8 +118,7 @@
         </record>
 
         <menuitem id="work_order_stage_menu" name="Stages" action="work_order_stage_action"
-                  parent="work_order_configuration"/>
-
+                  parent="workshop_config"/>
 
     </data>
 </odoo>

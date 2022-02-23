@@ -1,6 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <!--inspection Categories-->
+        <record id="inspection_category_search_view" model="ir.ui.view">
+            <field name="name">Inspection Category search</field>
+            <field name="model">inspect.category</field>
+            <field name="arch" type="xml">
+                <search string="Inspection Category">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="inspection_category_tree_view" model="ir.ui.view">
+            <field name="name">Inspection Category Tree</field>
+            <field name="model">inspect.category</field>
+            <field name="arch" type="xml">
+                <tree string="Inspection Category" editable="bottom">
+                    <field name="name"/>
+                    <field name="note"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="inspection_category_action" model="ir.actions.act_window">
+            <field name="name">Inspection Category</field>
+            <field name="res_model">inspect.category</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new Inspection Category
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="inspection_category_action" id="menu_inspect_category_act" parent="workshop_config"/>
+
+        <!--inspection items-->
+        <record id="inspection_items_search_view" model="ir.ui.view">
+            <field name="name">Inspection Items search</field>
+            <field name="model">inspect.items</field>
+            <field name="arch" type="xml">
+                <search string="Inspection Items">
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Category" name="category" context="{'group_by': 'category_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="inspection_items_tree_view" model="ir.ui.view">
+            <field name="name">Inspection Items Tree</field>
+            <field name="model">inspect.items</field>
+            <field name="arch" type="xml">
+                <tree string="Inspection Items" editable="bottom">
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="note"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="inspection_items_action" model="ir.actions.act_window">
+            <field name="name">Inspection Items</field>
+            <field name="res_model">inspect.items</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new Inspection Items
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="inspection_items_action" id="menu_items_category_act" parent="workshop_config"/>
+
         <!-- Work-Order inspect-->
         <record id="work_order_inspect_view_search" model="ir.ui.view">
             <field name="name">work_order_inspect_view_search</field>
@@ -44,7 +123,10 @@
             <field name="arch" type="xml">
                 <form string="Work-Order Inspect">
                     <header>
-                        <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                        <button name="action_process" string="Start" type="object" states="draft"/>
+                        <button name="action_close" string="Close" type="object" states="process"/>
+                        <button name="action_cancel" string="Cancel" type="object" states="process"/>
+                        <field name="state" widget="statusbar" />
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -54,17 +136,31 @@
                         </div>
                         <group>
                             <group>
-                                <field name="work_order_id"/>
-                                <field name="partner_id"/>
-                                <field name="machine_id"/>
+                                <field name="inspect_date"/>
+                                <field name="inspect_type"/>
+                                <field name="partner_id" options="{'no_create': True}"/>
+                                <field name="machine_id" options="{'no_create': True}"/>
                             </group>
                             <group>
-                                <field name="inspect_date"/>
+                                <field name="work_order_id"/>
                                 <field name="date_assign"/>
-                                <field name="user_id"/>
+                                <field name="user_id" options="{'no_create': True}"/>
                             </group>
                         </group>
                         <notebook>
+                            <page string="Inspect Lines">
+                                <field name="inspect_line"
+                                       widget="section_and_note_one2many"
+                                       mode="tree">
+                                    <tree string="Inspect Lines" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="inspect_category" options="{'no_create': True}"/>
+                                        <field name="inspect_item" options="{'no_create': True}"/>
+                                        <field name="item_evaluation"/>
+                                        <field name="note"/>
+                                    </tree>
+                                </field>
+                            </page>
                             <page string="Description">
                                 <field name="description"/>
                             </page>

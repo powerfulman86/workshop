@@ -155,7 +155,7 @@
         <!-- This Menu Item must have a parent and an action -->
         <menuitem id="menu_models"
                   name="Models"
-                  parent="work_order_settings" sequence="7"
+                  parent="workshop_warehouse_config" sequence="7"
                   action="action_models"/>
     </data>
 </odoo>
