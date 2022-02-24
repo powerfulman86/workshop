@@ -5,9 +5,7 @@ from odoo.exceptions import ValidationError, UserError
 
 AVAILABLE_STATE = [
     ('draft', 'Draft'),
-    ('process', 'Processing'),
     ('close', 'Closed'),
-    ('cancel', 'Cancel'),
 ]
 
 
@@ -45,9 +43,10 @@ class WorkOrderInspect(models.Model):
     work_order_id = fields.Many2one("work.order", string="Work-Order", readonly=True,
                                     states={'draft': [('readonly', False)]}, )
     partner_id = fields.Many2one('res.partner', string='Customer', tracking=True, readonly=True,
-                                 states={'draft': [('readonly', False)]}, )
+                                 states={'draft': [('readonly', False)]}, required=True)
     machine_id = fields.Many2one('res.machine', string='Machine', tracking=True, readonly=True,
-                                 states={'draft': [('readonly', False)]}, )
+                                 states={'draft': [('readonly', False)]}, required=True,
+                                 domain="[('partner_id', '=', partner_id)]")
     user_id = fields.Many2one('res.users', string='Assigned to', default=lambda self: self.env.uid, index=True,
                               readonly=True, states={'draft': [('readonly', False)]}, )
     description = fields.Html('Description', help='Description')
@@ -64,16 +63,10 @@ class WorkOrderInspect(models.Model):
                                                               ('technical', 'Technical'), ], required=False,
                                     readonly=True, states={'draft': [('readonly', False)]}, default='general', )
     inspect_line = fields.One2many(comodel_name="work.order.inspect.line", inverse_name="inspect_id", string="Lines",
-                                   required=False, readonly=True, states={'process': [('readonly', False)]}, )
-
-    def action_process(self):
-        self.state = 'process'
+                                   required=False, readonly=True, states={'draft': [('readonly', False)]}, )
 
     def action_close(self):
         self.state = 'close'
-
-    def action_cancel(self):
-        self.state = 'cancel'
 
     def unlink(self):
         for rec in self:
