@@ -4,11 +4,16 @@
         <menuitem id="work_order_root" name="Work Order" web_icon="workshop,static/description/app.png"/>
         <menuitem id="work_order_calendar" name="Calendar" parent="work_order_root" sequence="1"
                   action="calendar.action_calendar_event"/>
+        <menuitem id="work_order_root_menu"
+                  name="WorkShop"
+                  parent="work_order_root"
+                  sequence="2"/>
         <menuitem id="work_order_sale" name="Sales" parent="work_order_root" sequence="3"/>
         <menuitem id="work_order_purchase" name="Purchase" parent="work_order_root" sequence="4"/>
         <menuitem id="work_order_stock" name="Inventory" parent="work_order_root" sequence="5"/>
         <menuitem id="work_order_report" name="Reporting" parent="work_order_root" sequence="6"/>
-        <menuitem id="work_order_settings" name="Configuration" sequence="99" parent="work_order_root"/>
+        <menuitem id="work_order_settings" name="Configuration" sequence="99" parent="work_order_root"
+                  groups="workshop.workshop_manager"/>
 
         <!--configuration-->
         <!-- This Menu Item Must have a parent -->

@@ -9,39 +9,60 @@ AVAILABLE_STATE = [
 ]
 
 
-class InspectCategories(models.Model):
-    _name = 'inspect.category'
+class WorkshopInspectCategories(models.Model):
+    _name = 'workshop.inspect.category'
     _description = 'Inspect Category'
 
     name = fields.Char('Name', required=True)
     active = fields.Boolean(default=True,
                             help="If the active field is set to False, it will allow you to hide the Category without removing it.")
     note = fields.Text(string="Note", track_visibility='always')
-    category_items = fields.One2many(comodel_name="inspect.items", inverse_name="category_id", string="Category Items",
+    category_items = fields.One2many(comodel_name="workshop.inspect.items", inverse_name="category_id",
+                                     string="Category Items",
                                      required=False, )
 
 
-class InspectItems(models.Model):
-    _name = 'inspect.items'
+class WorkshopInspectItems(models.Model):
+    _name = 'workshop.inspect.items'
     _rec_name = 'name'
-    _description = 'New Description'
+    _description = 'Inspect Items'
 
-    name = fields.Char('Name', required=True, )
+    name = fields.Char('Name', required=True, translate=True)
     active = fields.Boolean(default=True,
                             help="If the active field is set to False, it will allow you to hide the item without removing it.")
     note = fields.Text(string="Note", track_visibility='always')
-    category_id = fields.Many2one(comodel_name="inspect.category", string="Inspect Category", required=True, )
+    category_id = fields.Many2one(comodel_name="workshop.inspect.category", string="Inspect Category", required=True, )
+    inspect_item_type = fields.Many2many(comodel_name='workshop.inspect.type', relation="inspect_type_items", )
 
 
-class WorkOrderInspect(models.Model):
-    _name = 'work.order.inspect'
+class WorkshopInspectType(models.Model):
+    _name = 'workshop.inspect.type'
+    _rec_name = 'name'
+    _description = 'Inspect Type'
+
+    name = fields.Char('Name', required=True, translate=True)
+    active = fields.Boolean(default=True,
+                            help="If the active field is set to False, it will allow you to hide the item without removing it.")
+    note = fields.Text(string="Note", track_visibility='always')
+    inspect_type_items = fields.Many2many(comodel_name='workshop.inspect.items', relation="inspect_type_items", )
+
+
+class WorkshopInspect(models.Model):
+    _name = 'workshop.inspect'
     _description = 'Work-Order Inspect'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _order = "id desc"
 
+    def _get_default_type(self):
+        """ Gives default stage_id """
+        default_stage = self.env['workshop.inspect.type'].search([], limit=1)
+        return default_stage
+
     name = fields.Char('Name')
-    work_order_id = fields.Many2one("work.order", string="Work-Order", readonly=True,
+    work_order_id = fields.Many2one("workshop.order", string="Work-Order", readonly=True,
                                     states={'draft': [('readonly', False)]}, )
+    ticket_id = fields.Many2one("workshop.ticket", string="Workshop Ticket", readonly=True,
+                                states={'draft': [('readonly', False)]}, )
     partner_id = fields.Many2one('res.partner', string='Customer', tracking=True, readonly=True,
                                  states={'draft': [('readonly', False)]}, required=True)
     machine_id = fields.Many2one('res.machine', string='Machine', tracking=True, readonly=True,
@@ -59,10 +80,9 @@ class WorkOrderInspect(models.Model):
     date_assign = fields.Datetime(string='Assigning Date', index=True, copy=False, readonly=True,
                                   states={'draft': [('readonly', False)]}, )
 
-    inspect_type = fields.Selection(string="Type", selection=[('general', 'General'), ('receive', 'Receive'),
-                                                              ('technical', 'Technical'), ], required=False,
-                                    readonly=True, states={'draft': [('readonly', False)]}, default='general', )
-    inspect_line = fields.One2many(comodel_name="work.order.inspect.line", inverse_name="inspect_id", string="Lines",
+    inspect_type = fields.Many2one(comodel_name="workshop.inspect.type", string="Type", required=True,
+                                   readonly=True, states={'draft': [('readonly', False)]}, default=_get_default_type)
+    inspect_line = fields.One2many(comodel_name="workshop.inspect.line", inverse_name="inspect_id", string="Lines",
                                    required=False, readonly=True, states={'draft': [('readonly', False)]}, )
 
     def action_close(self):
@@ -72,7 +92,7 @@ class WorkOrderInspect(models.Model):
         for rec in self:
             if rec.state != 'draft':
                 raise UserError(_('You can not delete an Inspection Which Is Not In Draft State.'))
-        return super(WorkOrderInspect, self).unlink()
+        return super(WorkshopInspect, self).unlink()
 
     def inspection_technical(self):
         return
@@ -85,8 +105,8 @@ class WorkOrderInspect(models.Model):
         if values.get('user_id'):
             values['date_assign'] = fields.Datetime.now()
 
-        res = super(WorkOrderInspect, self).create(values)
-        res.name = self.env['ir.sequence'].next_by_code('work.order.inspect') or '/'
+        res = super(WorkshopInspect, self).create(values)
+        res.name = self.env['ir.sequence'].next_by_code('workshop.inspect') or '/'
         return res
 
     def write(self, values):
@@ -94,27 +114,28 @@ class WorkOrderInspect(models.Model):
         if values.get('user_id') and 'date_assign' not in values:
             values['date_assign'] = fields.Datetime.now()
 
-        res = super(WorkOrderInspect, self).write(values)
+        res = super(WorkshopInspect, self).write(values)
         return res
 
 
 class WorkOrderInspectLine(models.Model):
-    _name = 'work.order.inspect.line'
+    _name = 'workshop.inspect.line'
     _description = 'Work-Order Inspect Line'
     _order = "id desc"
 
     name = fields.Char('Name')
     sequence = fields.Integer(string='Sequence', default=10)
-    inspect_id = fields.Many2one(comodel_name="work.order.inspect", string="Inspect Id", required=False, )
+    inspect_id = fields.Many2one(comodel_name="workshop.inspect", string="Inspect Id", required=False, )
     partner_id = fields.Many2one('res.partner', string='Customer', related="inspect_id.partner_id", store=True)
     machine_id = fields.Many2one('res.machine', string='Machine', related="inspect_id.machine_id", store=True)
     user_id = fields.Many2one('res.users', string='Assigned to', related="inspect_id.user_id", store=True)
     state = fields.Selection(AVAILABLE_STATE, string='State', related="inspect_id.state", store=True)
     inspect_date = fields.Datetime(string='Inspect Date', related="inspect_id.inspect_date", store=True)
-    inspect_type = fields.Selection(string="Type", related="inspect_id.inspect_type", store=True)
+    inspect_type = fields.Many2one(comodel_name="workshop.inspect.type", elated="inspect_id.inspect_type", store=True)
 
-    inspect_category = fields.Many2one(comodel_name="inspect.category", string="Inspect Category", required=True, )
-    inspect_item = fields.Many2one(comodel_name="inspect.items", string="Inspect Item", required=True,
+    inspect_category = fields.Many2one(comodel_name="workshop.inspect.category", string="Inspect Category",
+                                       required=True, )
+    inspect_item = fields.Many2one(comodel_name="workshop.inspect.items", string="Inspect Item", required=True,
                                    domain="[('category_id', '=', inspect_category)]")
     item_evaluation = fields.Selection(string="Evaluation",
                                        selection=[('working', 'Working'), ('malfunction', 'Not Working'), ],

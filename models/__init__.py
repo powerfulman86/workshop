@@ -3,11 +3,10 @@
 from . import menu
 from . import res_partner
 from . import res_machine
-from . import product_model
-from . import product_brand
-from . import ProductTemplate
-from . import work_order
+from . import stock
 from . import sale_order
-from . import work_order_inspect
+from . import workshop_inspect
+from . import workshop_order
+from . import workshop_ticket
 
 

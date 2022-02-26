@@ -3,31 +3,6 @@
 from odoo import fields, models, api, SUPERUSER_ID, _
 from odoo.exceptions import ValidationError, UserError
 
-
-class WorkOrderStage(models.Model):
-    _name = 'work.order.stage'
-    _description = 'Work-Order Stage'
-    _order = 'sequence, id'
-
-    name = fields.Char('Name', translate=True)
-    sequence = fields.Integer(default=1)
-    description = fields.Text(translate=True)
-    active = fields.Boolean(string='Active', default=True)
-
-
-class WorkOrderTags(models.Model):
-    """ Tags of project's tasks """
-    _name = "work.order.tags"
-    _description = "Work-Order Tags"
-
-    name = fields.Char('Tag Name', required=True)
-    color = fields.Integer(string='Color Index')
-
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', "Tag name already exists!"),
-    ]
-
-
 AVAILABLE_PRIORITIES = [
     ('0', 'Low'),
     ('1', 'Medium'),
@@ -43,8 +18,31 @@ AVAILABLE_STATE = [
 ]
 
 
-class WorkOrder(models.Model):
-    _name = 'work.order'
+class WorkshopOrderStage(models.Model):
+    _name = 'workshop.order.stage'
+    _description = 'Work-Order Stage'
+    _order = 'sequence, id'
+
+    name = fields.Char('Name', translate=True)
+    sequence = fields.Integer(default=1)
+    description = fields.Text(translate=True)
+    active = fields.Boolean(string='Active', default=True)
+
+
+class WorkshopTags(models.Model):
+    _name = "workshop.tags"
+    _description = "Work-Shop Tags"
+
+    name = fields.Char('Tag Name', required=True)
+    color = fields.Integer(string='Color Index')
+
+    _sql_constraints = [
+        ('name_uniq', 'unique (name)', "Tag name already exists!"),
+    ]
+
+
+class WorkshopOrder(models.Model):
+    _name = 'workshop.order'
     _description = 'Work-Order'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _order = "sequence, id desc"
@@ -57,12 +55,12 @@ class WorkOrder(models.Model):
 
     def _get_default_stage_id(self):
         """ Gives default stage_id """
-        default_stage = self.env['work.order.stage'].search([], limit=1)
+        default_stage = self.env['workshop.order.stage'].search([], limit=1)
         return default_stage
 
     name = fields.Char('Name')
     code = fields.Integer(string="code", required=False, digits='(8,0)')
-    stage_id = fields.Many2one('work.order.stage', string='Stage', ondelete='restrict', tracking=True, index=True,
+    stage_id = fields.Many2one('workshop.order.stage', string='Stage', ondelete='restrict', tracking=True, index=True,
                                default=_get_default_stage_id, group_expand='_read_group_stage_ids', copy=False)
 
     active = fields.Boolean(default=True,
@@ -74,7 +72,7 @@ class WorkOrder(models.Model):
                               tracking=True)
     priority = fields.Selection(AVAILABLE_PRIORITIES, string='Priority', index=True,
                                 default=AVAILABLE_PRIORITIES[0][0])
-    tag_ids = fields.Many2many('work.order.tags', string='Tags')
+    tag_ids = fields.Many2many('workshop.tags', string='Tags')
     order_date = fields.Datetime(string='Order Date', required=True, index=True, copy=False,
                                  default=fields.Datetime.now,
                                  help="Creation date of draft/sent Work orders,\nConfirmation date of confirmed orders.")
@@ -85,12 +83,13 @@ class WorkOrder(models.Model):
     inspection_receive = fields.Boolean(string="Inspection Receive", default=False)
     inspection_receive_count = fields.Integer(string="Inspection Count", compute="_compute_count_all", store=True)
     machine_kilometer = fields.Integer(string="Machine Kilometer", required=False, )
-    order_parts = fields.One2many('work.order.parts', 'order_id', string='Order Parts', copy=True, auto_join=True)
-    order_complain = fields.One2many('work.order.complain', 'order_id', string='Order Complain', copy=True,
+    order_parts = fields.One2many('workshop.order.parts', 'order_id', string='Order Parts', copy=True, auto_join=True)
+    order_complain = fields.One2many('workshop.order.complain', 'order_id', string='Order Complain', copy=True,
                                      auto_join=True)
-    order_diagnose = fields.One2many('work.order.diagnose', 'order_id', string='Order Diagnose', copy=True,
+    order_diagnose = fields.One2many('workshop.order.diagnose', 'order_id', string='Order Diagnose', copy=True,
                                      auto_join=True)
-    order_service = fields.One2many('work.order.service', 'order_id', string='Order Service', copy=True, auto_join=True)
+    order_service = fields.One2many('workshop.order.service', 'order_id', string='Order Service', copy=True,
+                                    auto_join=True)
     order_notes = fields.Html('Notes', help='Notes')
 
     sale_ids = fields.One2many('sale.order', 'work_id')
@@ -101,16 +100,16 @@ class WorkOrder(models.Model):
 
     def create_sale(self):
         sale_id = self.env['sale.order'].create({
-            'partner_id' : self.partner_id.id,
-            'work_id' : self.id,
-            'note' : self.order_notes,
+            'partner_id': self.partner_id.id,
+            'work_id': self.id,
+            'note': self.order_notes,
         })
 
         for line in self.order_parts:
             self.env['sale.order.line'].create({
                 'order_id': sale_id.id,
                 'product_id': line.product_id.id,
-                'name': line.product_id.name ,
+                'name': line.product_id.name,
                 'product_uom_qty': line.product_qty,
                 'price_unit': line.price_unit,
             })
@@ -118,7 +117,7 @@ class WorkOrder(models.Model):
             self.env['sale.order.line'].create({
                 'order_id': sale_id.id,
                 'product_id': ln.product_id.id,
-                'name': ln.product_id.name ,
+                'name': ln.product_id.name,
                 'product_uom_qty': 1,
                 'price_unit': ln.price_unit,
             })
@@ -151,7 +150,7 @@ class WorkOrder(models.Model):
             rec.invoice_count = len(rec.invoice_ids.ids)
 
     # def _compute_count_all(self):
-    #     inspection = self.env['work.order.inspect']
+    #     inspection = self.env['workshop.inspect']
     #     for record in self:
     #         record.inspection_receive_count = inspection.search_count([('work_order_id', '=', record.id)])
 
@@ -166,14 +165,14 @@ class WorkOrder(models.Model):
         if values.get('stage_id'):
             values.update(self.update_date_end(values['stage_id']))
 
-        res = super(WorkOrder, self).create(values)
-        res.name = self.env['ir.sequence'].next_by_code('work.order') or '/'
+        res = super(WorkshopOrder, self).create(values)
+        res.name = self.env['ir.sequence'].next_by_code('workshop.order') or '/'
         if not res.stage_id:
             stage = self._get_default_stage_id()
             res.stage_id = stage
 
         if res.inspection_receive:
-            inspection = self.env['work.order.inspect']
+            inspection = self.env['workshop.inspect']
             record = {
                 'work_order_id': res.id,
                 'partner_id': res.partner_id.id,
@@ -185,11 +184,11 @@ class WorkOrder(models.Model):
 
     def action_view_inspect(self):
         self.ensure_one()
-        inspection_id = self.env['work.order.inspect'].search([('work_order_id', '=', self.id)])
+        inspection_id = self.env['workshop.inspect'].search([('work_order_id', '=', self.id)])
         if len(inspection_id.ids) != 0:
             return {
                 "type": "ir.actions.act_window",
-                'res_model': 'work.order.inspect',
+                'res_model': 'workshop.inspect',
                 "views": [[False, "form"]],
                 "res_id": inspection_id.id,
                 "context": {"create": False},
@@ -205,7 +204,7 @@ class WorkOrder(models.Model):
             values.update(self.update_date_end(values['stage_id']))
 
         last = self.stage_id.sequence
-        res = super(WorkOrder, self).write(values)
+        res = super(WorkshopOrder, self).write(values)
         now = self.stage_id.sequence
         if now < last:
             raise ValidationError(_("Must Proceed In Forward Steps !"))
@@ -213,9 +212,9 @@ class WorkOrder(models.Model):
         # create inspection if not exist
         if 'inspection_receive' in values:
             if self.inspection_receive:
-                inspection = self.env['work.order.inspect'].search([('work_order_id', '=', self.id)])
+                inspection = self.env['workshop.inspect'].search([('work_order_id', '=', self.id)])
                 if len(inspection.ids) == 0:
-                    inspection = self.env['work.order.inspect']
+                    inspection = self.env['workshop.inspect']
                     record = {
                         'work_order_id': self.id,
                         'partner_id': self.partner_id.id,
@@ -227,7 +226,7 @@ class WorkOrder(models.Model):
         return res
 
     def update_date_end(self, stage_id):
-        stage_close = self.env['work.order.stage'].search([], order="sequence desc", limit=1)
+        stage_close = self.env['workshop.order.stage'].search([], order="sequence desc", limit=1)
 
         if stage_close == stage_id:
             return {'date_end': fields.Datetime.now()}
@@ -237,26 +236,27 @@ class WorkOrder(models.Model):
         for rec in self:
             if rec.stage_id.sequence != 1:
                 raise UserError(_('You can not delete a Work-Order Which Is Not In Draft State.'))
-        return super(WorkOrder, self).unlink()
+        return super(WorkshopOrder, self).unlink()
 
 
 class WorkOrderComplain(models.Model):
-    _name = 'work.order.complain'
+    _name = 'workshop.order.complain'
     _description = 'Work-Order Complain'
     _order = "sequence, id desc"
 
     def _get_default_stage_id(self):
         """ Gives default stage_id """
-        default_stage = self.env['work.order.stage'].search([], limit=1)
+        default_stage = self.env['workshop.order.stage'].search([], limit=1)
         return default_stage
 
-    order_id = fields.Many2one('work.order', string='Order Reference', required=True, ondelete='cascade', index=True,
+    order_id = fields.Many2one('workshop.order', string='Order Reference', required=True, ondelete='cascade',
+                               index=True,
                                copy=False)
     complain_notes = fields.Text(string='Complain', required=True)
     state = fields.Selection(string="State", selection=[('open', 'Open'), ('closed', 'Closed'), ('pending', 'Pending')],
                              required=False, default='open')
     sequence = fields.Integer(string='Sequence', default=10)
-    stage_id = fields.Many2one('work.order.stage', related='order_id.stage_id', string='Order Stage', readonly=True,
+    stage_id = fields.Many2one('workshop.order.stage', related='order_id.stage_id', string='Order Stage', readonly=True,
                                copy=False, store=True, default=_get_default_stage_id, )
     order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer', readonly=False)
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True,
@@ -264,19 +264,15 @@ class WorkOrderComplain(models.Model):
 
 
 class WorkOrderDiagnose(models.Model):
-    _name = 'work.order.diagnose'
+    _name = 'workshop.order.diagnose'
     _description = 'Work-Order Lines'
     _order = "sequence, id desc"
 
-    def _get_default_stage_id(self):
-        """ Gives default stage_id """
-        default_stage = self.env['work.order.stage'].search([], limit=1)
-        return default_stage
-
-    order_id = fields.Many2one('work.order', string='Order Reference', required=True, ondelete='cascade', index=True,
+    order_id = fields.Many2one('workshop.order', string='Order Reference', required=True, ondelete='cascade',
+                               index=True,
                                copy=False)
-    stage_id = fields.Many2one('work.order.stage', related='order_id.stage_id', string='Order Stage', readonly=True,
-                               copy=False, store=True, default=_get_default_stage_id, )
+    stage_id = fields.Many2one('workshop.order.stage', related='order_id.stage_id', string='Order Stage', readonly=True,
+                               copy=False, store=True, )
     order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer', readonly=False)
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True,
                                  default=lambda self: self.env.company)
@@ -290,25 +286,21 @@ class WorkOrderDiagnose(models.Model):
 
 
 class WorkOrderParts(models.Model):
-    _name = 'work.order.parts'
+    _name = 'workshop.order.parts'
     _description = 'Work-Order Parts'
     _order = "sequence, id desc"
 
-    def _get_default_stage_id(self):
-        """ Gives default stage_id """
-        default_stage = self.env['work.order.stage'].search([], limit=1)
-        return default_stage
-
-    order_id = fields.Many2one('work.order', string='Order Reference', required=True, ondelete='cascade', index=True,
+    order_id = fields.Many2one('workshop.order', string='Order Reference', required=True, ondelete='cascade',
+                               index=True,
                                copy=False)
     sequence = fields.Integer(string='Sequence', default=10)
-    stage_id = fields.Many2one('work.order.stage', related='order_id.stage_id', string='Order Stage', readonly=True,
-                               copy=False, store=True, default=_get_default_stage_id, )
+    stage_id = fields.Many2one('workshop.order.stage', related='order_id.stage_id', string='Order Stage', readonly=True,
+                               copy=False, store=True, )
     order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer', readonly=False)
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True,
                                  default=lambda self: self.env.company)
-    user_id = fields.Many2one('res.users', string='Technical', index=True, default=lambda self: self.env.uid,)
-    install_date = fields.Date(string="install_date", required=False, default=fields.Datetime.now,)
+    user_id = fields.Many2one('res.users', string='Technical', index=True, default=lambda self: self.env.uid, )
+    install_date = fields.Date(string="install_date", required=False, default=fields.Datetime.now, )
     price_unit = fields.Float('Unit Price', required=True, digits='Product Price', default=0.0)
     product_id = fields.Many2one(
         'product.product', string='Product',
@@ -322,20 +314,16 @@ class WorkOrderParts(models.Model):
 
 
 class WorkOrderService(models.Model):
-    _name = 'work.order.service'
+    _name = 'workshop.order.service'
     _description = 'Work-Order Service'
     _order = "sequence, id desc"
 
-    def _get_default_stage_id(self):
-        """ Gives default stage_id """
-        default_stage = self.env['work.order.stage'].search([], limit=1)
-        return default_stage
-
-    order_id = fields.Many2one('work.order', string='Order Reference', required=True, ondelete='cascade', index=True,
+    order_id = fields.Many2one('workshop.order', string='Order Reference', required=True, ondelete='cascade',
+                               index=True,
                                copy=False)
     sequence = fields.Integer(string='Sequence', default=10)
-    stage_id = fields.Many2one('work.order.stage', related='order_id.stage_id', string='Order Stage', readonly=True,
-                               copy=False, store=True, default=_get_default_stage_id, )
+    stage_id = fields.Many2one('workshop.order.stage', related='order_id.stage_id', string='Order Stage', readonly=True,
+                               copy=False, store=True, )
     order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer', readonly=False)
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True,
                                  default=lambda self: self.env.company)
@@ -352,5 +340,3 @@ class WorkOrderService(models.Model):
     product_qty = fields.Float(string='Quantity', digits='Product Quantity', required=True, default=1.0)
     user_id = fields.Many2one('res.users', string='Technical', index=True, )
     user_id_revise = fields.Many2one('res.users', string='Revision', index=True, )
-
-

@@ -1,21 +1,30 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_product_brand,product_brand,model_product_brand,stock.group_stock_manager,1,1,1,1
 access_product_model,product_model,model_product_model,stock.group_stock_manager,1,1,1,1
-access_res_machine,res_machine,model_res_machine,base.group_user,1,1,1,1
+access_res_machine,res_machine,model_res_machine,workshop.workshop_user,1,1,1,1
 
-access_work_order_stage,work_order_stage,model_work_order_stage,base.group_user,1,0,0,0
-access_work_order_tags,access_work_order_tags,model_work_order_tags,base.group_user,1,1,1,1
+access_workshop_order_stage_manager,workshop_order_stage Manager,model_workshop_order_stage,workshop.workshop_manager,1,1,1,1
+access_workshop_tags_manager,access_workshop_tags Manager,model_workshop_tags,workshop.workshop_manager,1,1,1,1
 
-access_work_order,work_order,model_work_order,base.group_user,1,1,1,1
-access_work_order_complain,access_work_order_complain,model_work_order_complain,base.group_user,1,1,1,1
-access_work_order_diagnose,access_work_order_diagnose,model_work_order_diagnose,base.group_user,1,1,1,1
-access_work_order_service,access_work_order_service,model_work_order_service,base.group_user,1,1,1,1
-access_work_order_parts,access_work_order_parts,model_work_order_parts,base.group_user,1,1,1,1
+access_workshop_order_stage_user,workshop_order_stage User,model_workshop_order_stage,workshop.workshop_user,1,0,0,0
+access_workshop_tags_user,access_workshop_tags User,model_workshop_tags,workshop.workshop_user,1,0,0,0
 
-access_inspect_category_manager,inspect_category_manager,model_inspect_category,workshop.workshop_manager,1,1,1,1
-access_inspect_items_manager,inspect_items_manager,model_inspect_items,workshop.workshop_manager,1,1,1,1
+access_workshop_order,workshop_order,model_workshop_order,workshop.workshop_user,1,1,1,1
+access_workshop_order_complain,access_workshop_order_complain,model_workshop_order_complain,workshop.workshop_user,1,1,1,1
+access_workshop_order_diagnose,access_workshop_order_diagnose,model_workshop_order_diagnose,workshop.workshop_user,1,1,1,1
+access_workshop_order_service,access_workshop_order_service,model_workshop_order_service,workshop.workshop_user,1,1,1,1
+access_workshop_order_parts,access_workshop_order_parts,model_workshop_order_parts,workshop.workshop_user,1,1,1,1
 
-access_inspect_category_user,inspect_category_user,model_inspect_category,workshop.workshop_user,1,0,0,0
-access_inspect_items_user,inspect_items_user,model_inspect_items,workshop.workshop_user,1,0,0,0
-access_work_order_inspect,access_work_order_inspect,model_work_order_inspect,workshop.workshop_user,1,1,1,1
-access_work_order_inspect_line,access_work_order_inspect_line,model_work_order_inspect_line,workshop.workshop_user,1,1,1,1
+access_workshop_inspect_category_manager,inspect_category_manager,model_workshop_inspect_category,workshop.workshop_manager,1,1,1,1
+access_workshop_inspect_type_manager,inspect_type_manager,model_workshop_inspect_type,workshop.workshop_manager,1,1,1,1
+access_workshop_inspect_items_manager,inspect_items_manager,model_workshop_inspect_items,workshop.workshop_manager,1,1,1,1
+
+access_workshop_inspect_category_user,inspect_category_user,model_workshop_inspect_category,workshop.workshop_user,1,0,0,0
+access_workshop_inspect_type_user,inspect_type_user,model_workshop_inspect_type,workshop.workshop_user,1,0,0,0
+access_workshop_inspect_items_user,inspect_items_user,model_workshop_inspect_items,workshop.workshop_user,1,0,0,0
+access_workshop_inspect,access_workshop_inspect_inspect,model_workshop_inspect,workshop.workshop_user,1,1,1,1
+access_workshop_inspect_line,access_workshop_inspect_line,model_workshop_inspect_line,workshop.workshop_user,1,1,1,1
+
+
+access_workshop_ticket_stage_manager,workshop_ticket_stage Manager,model_workshop_ticket_stage,workshop.workshop_manager,1,1,1,1
+access_workshop_ticket,workshop_ticket,model_workshop_ticket,workshop.workshop_user,1,1,1,1

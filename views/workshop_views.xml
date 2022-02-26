@@ -4,7 +4,7 @@
         <!-- Tags -->
         <record id="work_order_tags_search_view" model="ir.ui.view">
             <field name="name">Tags</field>
-            <field name="model">work.order.tags</field>
+            <field name="model">workshop.tags</field>
             <field name="arch" type="xml">
                 <search string="Tags">
                     <field name="name"/>
@@ -14,7 +14,7 @@
 
         <record id="work_order_tags_tree_view" model="ir.ui.view">
             <field name="name">Tags</field>
-            <field name="model">work.order.tags</field>
+            <field name="model">workshop.tags</field>
             <field name="arch" type="xml">
                 <tree string="Tags" editable="bottom">
                     <field name="name"/>
@@ -24,7 +24,7 @@
 
         <record id="work_order_tags_action" model="ir.actions.act_window">
             <field name="name">Tags</field>
-            <field name="res_model">work.order.tags</field>
+            <field name="res_model">workshop.tags</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_mode">tree</field>
             <field name="help" type="html">
@@ -39,7 +39,7 @@
         <!-- Work-Order Stages-->
         <record id="work_order_stage_form" model="ir.ui.view">
             <field name="name">work_order_stage_form</field>
-            <field name="model">work.order.stage</field>
+            <field name="model">workshop.order.stage</field>
             <field name="arch" type="xml">
                 <form string="Work Order Stage">
                     <sheet>
@@ -59,7 +59,7 @@
 
         <record id="work_order_stage_kanban" model="ir.ui.view">
             <field name="name">work_order_stage_kanban</field>
-            <field name="model">work.order.stage</field>
+            <field name="model">workshop.order.stage</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
                     <field name="name"/>
@@ -87,7 +87,7 @@
 
         <record id="work_order_stage_tree" model="ir.ui.view">
             <field name="name">work_order_stage_tree</field>
-            <field name="model">work.order.stage</field>
+            <field name="model">workshop.order.stage</field>
             <field name="arch" type="xml">
                 <tree string="Work Order Stages">
                     <field name="sequence" widget="handle"/>
@@ -101,7 +101,7 @@
         <record id="work_order_stage_action" model="ir.actions.act_window">
             <field name="name">Work Order Stage</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">work.order.stage</field>
+            <field name="res_model">workshop.order.stage</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="work_order_stage_tree"/>
             <field name="help" type="html">
@@ -118,7 +118,7 @@
         </record>
 
         <menuitem id="work_order_stage_menu" name="Stages" action="work_order_stage_action"
-                  parent="workshop_config"/>
+                  parent="workshop_config" groups="base.group_no_one"/>
 
     </data>
 </odoo>

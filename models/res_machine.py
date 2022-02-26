@@ -41,30 +41,11 @@ class ResMachine(models.Model):
     code6 = fields.Char(string="code6", required=True, size=1)
     code7 = fields.Char(string="code7", size=1)
     work_order_count = fields.Integer(compute="_compute_count_all", string='Work-orders')
-
-    def _compute_count_all(self):
-        orders = self.env['work.order']
-        for record in self:
-            record.work_order_count = orders.search_count([('machine_id', '=', record.id)])
-
-    def action_open_orders(self):
-        """ This opens the xml view specified in xml_id for the current vehicle """
-        self.ensure_one()
-        xml_id = self.env.context.get('xml_id')
-        if xml_id:
-            res = self.env['ir.actions.act_window'].for_xml_id('workshop', xml_id)
-            res.update(
-                context=dict(self.env.context, default_vehicle_id=self.id, group_by=False),
-                domain=[('machine_id', '=', self.id)]
-            )
-            return res
-        return False
-
-    @api.depends('code1', 'code2', 'code3', 'code4', 'code5', 'code6', 'code7')
-    def _get_license_number(self):
-        for rec in self:
-            rec.name = (rec.code1 or '') + (rec.code2 or '') + (rec.code3 or '') + (rec.code4 or '') + (
-                    rec.code5 or '') + (rec.code6 or '') + (rec.code7 or '')
+    work_order_ids = fields.One2many('workshop.order', 'machine_id')
+    inspect_count = fields.Integer(compute="_compute_count_all", string='Inspections')
+    inspect_ids = fields.One2many('workshop.inspect', 'machine_id')
+    ticket_count = fields.Integer(compute="_compute_count_all", string='Tickets')
+    ticket_ids = fields.One2many('workshop.ticket', 'machine_id')
 
     _sql_constraints = [
         (
@@ -73,6 +54,65 @@ class ResMachine(models.Model):
             "Machine Name must be unique across the database!",
         )
     ]
+
+    @api.depends('work_order_ids', 'inspect_ids', 'ticket_ids')
+    def _compute_count_all(self):
+        for rec in self:
+            rec.work_order_count = len(rec.work_order_ids.ids)
+            rec.inspect_count = len(rec.inspect_ids.ids)
+            rec.ticket_count = len(rec.ticket_ids.ids)
+
+    def action_view_work_orders(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            'res_model': 'workshop.order',
+            'view_mode': 'tree,form',
+            'name': _('Work-Orders'),
+            "domain": [["machine_id", "=", self.id]],
+            "context": {"create": False},
+        }
+
+    # def action_open_orders(self):
+    #     """ This opens the xml view specified in xml_id for the current vehicle """
+    #     self.ensure_one()
+    #     xml_id = self.env.context.get('xml_id')
+    #     if xml_id:
+    #         res = self.env['ir.actions.act_window'].for_xml_id('workshop', xml_id)
+    #         res.update(
+    #             context=dict(self.env.context, default_vehicle_id=self.id, group_by=False),
+    #             domain=[('machine_id', '=', self.id)]
+    #         )
+    #         return res
+    #     return False
+    #
+    def action_view_inspect(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            'res_model': 'workshop.inspect',
+            'view_mode': 'tree,form',
+            'name': _('Inspections'),
+            "domain": [["machine_id", "=", self.id]],
+            "context": {"create": False},
+        }
+
+    def action_view_ticket(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            'res_model': 'workshop.ticket',
+            'view_mode': 'tree,form',
+            'name': _('Tickets'),
+            "domain": [["machine_id", "=", self.id]],
+            "context": {"create": False},
+        }
+
+    @api.depends('code1', 'code2', 'code3', 'code4', 'code5', 'code6', 'code7')
+    def _get_license_number(self):
+        for rec in self:
+            rec.name = (rec.code1 or '') + (rec.code2 or '') + (rec.code3 or '') + (rec.code4 or '') + (
+                    rec.code5 or '') + (rec.code6 or '') + (rec.code7 or '')
 
     @api.constrains('production_year')
     def _check_production_year(self):
@@ -96,3 +136,16 @@ class ResMachine(models.Model):
             domain = ['|', ('name', operator, name), ('code', operator, name)]
         rec = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         return models.lazy_name_get(self.browse(rec).with_user(name_get_uid))
+
+    def create_ticket(self):
+        ticket_id = self.env['workshop.ticket'].create({
+            'partner_id': self.partner_id.id,
+            'machine_id': self.id,
+        })
+        return {
+            "type": "ir.actions.act_window",
+            'res_model': 'workshop.ticket',
+            "views": [[False, "form"]],
+            "res_id": ticket_id.id,
+            "context": {"create": False},
+        }

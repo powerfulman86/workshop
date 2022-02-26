@@ -191,7 +191,7 @@
     <report
             string="Work-Order"
             id="report_workorder"
-            model="work.order"
+            model="workshop.order"
             report_type="qweb-pdf"
             name="workshop.report_workorder_document"
             file="workshop.report_workorder_document"

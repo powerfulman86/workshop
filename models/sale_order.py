@@ -5,14 +5,14 @@ from odoo import api, fields, models
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
-    work_id = fields.Many2one("work.order", string="Workshop", required=False, )
+    work_id = fields.Many2one("workshop.order", string="Workshop", required=False, )
 
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     machine_id = fields.Many2one("res.machine", string="Machine", required=False, )
-    work_id = fields.Many2one("work.order", string="Workshop", required=False, )
+    work_id = fields.Many2one("workshop.order", string="Workshop", required=False, )
 
     def _prepare_invoice_vals(self):
         vals = super(SaleOrder, self)._prepare_invoice_vals()

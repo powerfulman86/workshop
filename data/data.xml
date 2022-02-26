@@ -1,28 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!-- Stages -->
-        <record id="work_order_stage_1" model="work.order.stage">
+        <!-- WorkOrder Stages -->
+        <record id="work_order_stage_1" model="workshop.order.stage">
             <field name="sequence">1</field>
             <field name="name">Draft</field>
         </record>
 
-        <record id="work_order_stage_2" model="work.order.stage">
+        <record id="work_order_stage_2" model="workshop.order.stage">
             <field name="sequence">2</field>
             <field name="name">Open</field>
         </record>
 
-        <record id="work_order_stage_3" model="work.order.stage">
+        <record id="work_order_stage_3" model="workshop.order.stage">
             <field name="sequence">3</field>
             <field name="name">Pending</field>
         </record>
 
-        <record id="work_order_stage_4" model="work.order.stage">
+        <record id="work_order_stage_4" model="workshop.order.stage">
             <field name="sequence">4</field>
             <field name="name">Billing</field>
         </record>
 
-        <record id="work_order_stage_5" model="work.order.stage">
+        <record id="work_order_stage_5" model="workshop.order.stage">
+            <field name="sequence">5</field>
+            <field name="name">Close</field>
+        </record>
+
+        <!-- Ticket Stages -->
+        <record id="workshop_ticket_stage_1" model="workshop.ticket.stage">
+            <field name="sequence">1</field>
+            <field name="name">Draft</field>
+        </record>
+
+        <record id="workshop_ticket_stage_2" model="workshop.ticket.stage">
+            <field name="sequence">2</field>
+            <field name="name">Open</field>
+        </record>
+
+        <record id="workshop_ticket_stage_3" model="workshop.ticket.stage">
+            <field name="sequence">3</field>
+            <field name="name">Processing</field>
+        </record>
+
+        <record id="workshop_ticket_stage_4" model="workshop.ticket.stage">
+            <field name="sequence">4</field>
+            <field name="name">Hold</field>
+        </record>
+
+        <record id="workshop_ticket_stage_5" model="workshop.ticket.stage">
             <field name="sequence">5</field>
             <field name="name">Close</field>
         </record>

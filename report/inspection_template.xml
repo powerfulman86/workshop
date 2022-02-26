@@ -25,7 +25,7 @@
 
                             <div class="col-3 bm-2">
                                 <strong>Type:</strong>
-                                <p t-field="o.inspect_type" class="m-0"/>
+<!--                                <p t-field="o.inspect_type" class="m-0"/>-->
                             </div>
 
                             <div class="col-3 bm-2">
@@ -94,7 +94,7 @@
     <report
             string="WorkShop Inspection"
             id="report_inspection"
-            model="work.order.inspect"
+            model="workshop.inspect"
             report_type="qweb-pdf"
             name="workshop.report_inspection_document"
             file="workshop.report_inspection_document"
