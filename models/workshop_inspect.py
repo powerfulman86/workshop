@@ -59,8 +59,9 @@ class WorkshopInspect(models.Model):
         return default_stage
 
     name = fields.Char('Name')
-    work_order_id = fields.Many2one("workshop.order", string="Work-Order", readonly=True,
-                                    states={'draft': [('readonly', False)]}, )
+    work_order_id = fields.One2many(comodel_name="workshop.order", inverse_name="inspect_id", string="Work-Order",
+                                    required=False, )
+    work_order_count = fields.Integer('Work-Order Count', compute="_compute_work_order_count")
     ticket_id = fields.Many2one("workshop.ticket", string="Workshop Ticket", readonly=True,
                                 states={'draft': [('readonly', False)]}, )
     partner_id = fields.Many2one('res.partner', string='Customer', tracking=True, readonly=True,
@@ -85,6 +86,11 @@ class WorkshopInspect(models.Model):
     inspect_line = fields.One2many(comodel_name="workshop.inspect.line", inverse_name="inspect_id", string="Lines",
                                    required=False, readonly=True, states={'draft': [('readonly', False)]}, )
 
+    @api.depends('work_order_id')
+    def _compute_work_order_count(self):
+        for rec in self:
+            rec.work_order_count = len(rec.work_order_id.ids)
+
     def action_close(self):
         self.state = 'close'
 
@@ -94,11 +100,12 @@ class WorkshopInspect(models.Model):
                 raise UserError(_('You can not delete an Inspection Which Is Not In Draft State.'))
         return super(WorkshopInspect, self).unlink()
 
-    def inspection_technical(self):
-        return
-
-    def inspection_receive(self):
-        return
+    @api.onchange("inspect_type")
+    def set_inspection_type_items(self):
+        self.ensure_one()
+        if self.inspect_type and len(self.inspect_type.inspect_type_items.ids) != 0:
+            for x in self.inspect_type.inspect_type_items.ids:
+                self.update({'inspect_line': [(4, x)]})
 
     @api.model
     def create(self, values):
@@ -117,6 +124,32 @@ class WorkshopInspect(models.Model):
         res = super(WorkshopInspect, self).write(values)
         return res
 
+    def create_work_order(self):
+        work_order_id = self.env['workshop.order'].create({
+            'partner_id': self.partner_id.id,
+            'machine_id': self.machine_id.id,
+            'inspect_id': self.id,
+        })
+        return {
+            "type": "ir.actions.act_window",
+            'res_model': 'workshop.order',
+            "views": [[False, "form"]],
+            "res_id": work_order_id.id,
+            "context": {"create": False},
+        }
+
+    def action_view_work_order(self):
+        self.ensure_one()
+        work_order = self.env['workshop.order'].search([('inspect_id', '=', self.id)])
+        if len(work_order.ids) != 0:
+            return {
+                "type": "ir.actions.act_window",
+                'res_model': 'workshop.order',
+                "views": [[False, "form"]],
+                "res_id": work_order.id,
+                "context": {"create": False},
+            }
+
 
 class WorkOrderInspectLine(models.Model):
     _name = 'workshop.inspect.line'
@@ -131,12 +164,11 @@ class WorkOrderInspectLine(models.Model):
     user_id = fields.Many2one('res.users', string='Assigned to', related="inspect_id.user_id", store=True)
     state = fields.Selection(AVAILABLE_STATE, string='State', related="inspect_id.state", store=True)
     inspect_date = fields.Datetime(string='Inspect Date', related="inspect_id.inspect_date", store=True)
-    inspect_type = fields.Many2one(comodel_name="workshop.inspect.type", elated="inspect_id.inspect_type", store=True)
+    inspect_type = fields.Many2one(comodel_name="workshop.inspect.type", related="inspect_id.inspect_type", store=True)
 
     inspect_category = fields.Many2one(comodel_name="workshop.inspect.category", string="Inspect Category",
-                                       required=True, )
-    inspect_item = fields.Many2one(comodel_name="workshop.inspect.items", string="Inspect Item", required=True,
-                                   domain="[('category_id', '=', inspect_category)]")
+                                       related="inspect_item.category_id", store=True)
+    inspect_item = fields.Many2one(comodel_name="workshop.inspect.items", string="Inspect Item", required=True, )
     item_evaluation = fields.Selection(string="Evaluation",
                                        selection=[('working', 'Working'), ('malfunction', 'Not Working'), ],
                                        required=True, default="working")

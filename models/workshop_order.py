@@ -97,6 +97,7 @@ class WorkshopOrder(models.Model):
     sales_count = fields.Integer('Sales Count', compute="compute_counts")
     invoice_count = fields.Integer('Invoice Count', compute="compute_counts")
     sale_created = fields.Boolean()
+    inspect_id = fields.Many2one(comodel_name="workshop.inspect", string="Inspection", required=False, )
 
     def create_sale(self):
         sale_id = self.env['sale.order'].create({
