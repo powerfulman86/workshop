@@ -8,5 +8,6 @@ from . import sale_order
 from . import workshop_inspect
 from . import workshop_order
 from . import workshop_ticket
+from . import order_estimate
 
 

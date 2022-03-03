@@ -148,7 +148,6 @@
                     <field name="name"/>
                     <field name="inspect_date"/>
                     <field name="inspect_type"/>
-                    <field name="work_order_id"/>
                     <field name="machine_id"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
@@ -163,16 +162,17 @@
             <field name="arch" type="xml">
                 <form string="Inspection">
                     <header>
-                        <button name="create_work_order" type="object" string="Create Work-Order" class="oe_highlight"
-                        attrs="{'invisible':[('work_order_count', '==', 1)]}"/>
+                        <button name="create_estimate" type="object" string="Create Estimate" class="oe_highlight"
+                                attrs="{'invisible':[('estimate_count', '==', 1)]}"/>
                         <button name="action_close" string="Close" type="object" states="draft"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="action_view_work_order" type="object" class="oe_stat_button"
-                                    icon="fa-pencil-square-o" string="Work-Order" attrs="{'invisible':[('work_order_count', '==', 0)]}">
-                                <field name="work_order_count" invisible="1"/>
+                            <button name="action_view_estimate_order" type="object" class="oe_stat_button"
+                                    icon="fa-pencil-square-o" string="Estimate-Order"
+                                    attrs="{'invisible':[('estimate_count', '==', 0)]}">
+                                <field name="estimate_count" invisible="1"/>
                             </button>
                         </div>
 
@@ -201,7 +201,10 @@
                                 <field name="inspect_line"
                                        widget="section_and_note_one2many"
                                        mode="tree">
-                                    <tree string="Inspect Lines" editable="bottom">
+                                    <tree string="Inspect Lines" editable="bottom"
+                                          decoration-info="item_evaluation == 'check'"
+                                          decoration-danger="item_evaluation=='malfunction'"
+                                          decoration-success="item_evaluation=='working'">
                                         <field name="sequence" widget="handle"/>
                                         <field name="inspect_category" invisible="1"/>
                                         <field name="inspect_item" options="{'no_create': True}"/>
@@ -241,8 +244,7 @@
         <menuitem id="work_order_inspect_menu"
                   name="Inspection"
                   parent="work_order_root_menu"
-                  action="work_order_inspect_action" sequence="2"/>
-
+                  action="work_order_inspect_action" sequence="3"/>
 
     </data>
 </odoo>

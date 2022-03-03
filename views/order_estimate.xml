@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="work_order_estimate_view_search" model="ir.ui.view">
+            <field name="name">work_order_estimate_view_search</field>
+            <field name="model">workshop.estimate</field>
+            <field name="arch" type="xml">
+                <search string="Work-Shop Estimate">
+                    <field name="name"/>
+                    <field name="user_id"/>
+                    <field name="partner_id" operator="child_of"/>
+                    <field name="machine_id"/>
+                    <field name="state"/>
+                    <filter string="My Estimate" name="my_estimate" domain="[('user_id', '=', uid)]"/>
+                    <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Assigned to" name="user" context="{'group_by': 'user_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="work_order_estimate_tree" model="ir.ui.view">
+            <field name="name">work_order_estimate_view_tree</field>
+            <field name="model">workshop.estimate</field>
+            <field name="arch" type="xml">
+                <tree string="Estimate" decoration-info="state=='draft'" decoration-success="state=='close'">
+                    <field name="name"/>
+                    <field name="order_date"/>
+                    <field name="machine_id"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="work_order_estimate_form" model="ir.ui.view">
+            <field name="name">work_order_estimate_view_form</field>
+            <field name="model">workshop.estimate</field>
+            <field name="arch" type="xml">
+                <form string="Estimate">
+                    <sheet>
+                        <div class="oe_title">
+                            <h3>
+                                <field name="name" readonly="1"/>
+                            </h3>
+                        </div>
+
+                        <notebook>
+                            <page string="Main Data">
+                                <group>
+                                    <group>
+                                        <field name="order_date"/>
+                                        <field name="partner_id" options="{'no_create': True}"/>
+                                        <field name="machine_id" options="{'no_create': True}"/>
+                                    </group>
+                                    <group>
+                                        <field name="date_assign"/>
+                                        <field name="user_id" options="{'no_create': True}"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Description">
+                                <field name="description"/>
+                            </page>
+                        </notebook>
+
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="work_order_estimate_action" model="ir.actions.act_window">
+            <field name="name">Estimate</field>
+            <field name="res_model">workshop.estimate</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new Work-shop Estimate
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="work_order_estimate_menu"
+                  name="Estimate"
+                  parent="work_order_root_menu"
+                  action="work_order_estimate_action" sequence="4"/>
+
+    </data>
+</odoo>

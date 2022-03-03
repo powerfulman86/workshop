@@ -22,6 +22,8 @@ class ProductBrand(models.Model):
     active = fields.Boolean('Active', default=True, help="Set active to false to hide the Brand without removing it.")
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account',
                                           groups="analytic.group_analytic_accounting")
+    model_ids = fields.One2many('product.model', 'brand_id', string='Brand Models', )
+    models_count = fields.Integer(string='Number of Models', compute='_compute_products_count', )
 
     # enable_analytic = fields.Boolean(string='Enable analytic', compute="_enable_analytic")
 
@@ -51,10 +53,11 @@ class ProductBrand(models.Model):
         values['code'] = "BR" + self.check_brand_code(self.random_number(4))
         return super(ProductBrand, self).create(values)
 
-    @api.depends('product_ids')
+    @api.depends('product_ids','model_ids')
     def _compute_products_count(self):
         for brand in self:
             brand.products_count = len(brand.product_ids)
+            brand.models_count = len(brand.model_ids)
 
 
 class ProductModel(models.Model):
@@ -69,6 +72,7 @@ class ProductModel(models.Model):
     active = fields.Boolean('Active', default=True, help="Set active to false to hide the Brand without removing it.")
     logo = fields.Binary('Logo File', attachment=True)
     bannar = fields.Binary('Brand Bannar', attachment=True)
+    brand_id = fields.Many2one('product.brand', string='Brand', help='Select a brand for this product')
 
     @api.depends('product_ids')
     def _compute_products_count(self):
@@ -79,5 +83,6 @@ class ProductModel(models.Model):
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    model_id = fields.Many2many('product.model', string='Model', help='Select a brand for this product')
+    model_id = fields.Many2many('product.model', string='Model', help='Select a brand for this product',
+                                domain="[('brand_id', '=', brand_id)]")
     brand_id = fields.Many2one('product.brand', string='Brand', help='Select a brand for this product')

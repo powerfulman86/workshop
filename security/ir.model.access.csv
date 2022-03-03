@@ -24,7 +24,7 @@ access_workshop_inspect_type_user,inspect_type_user,model_workshop_inspect_type,
 access_workshop_inspect_items_user,inspect_items_user,model_workshop_inspect_items,workshop.workshop_user,1,0,0,0
 access_workshop_inspect,access_workshop_inspect_inspect,model_workshop_inspect,workshop.workshop_user,1,1,1,1
 access_workshop_inspect_line,access_workshop_inspect_line,model_workshop_inspect_line,workshop.workshop_user,1,1,1,1
-
+access_workshop_estimate,access_workshop_estimate,model_workshop_estimate,workshop.workshop_user,1,1,1,1
 
 access_workshop_ticket_stage_manager,workshop_ticket_stage Manager,model_workshop_ticket_stage,workshop.workshop_manager,1,1,1,1
 access_workshop_ticket,workshop_ticket,model_workshop_ticket,workshop.workshop_user,1,1,1,1

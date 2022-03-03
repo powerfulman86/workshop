@@ -84,6 +84,8 @@ class WorkshopTicket(models.Model):
             'machine_id': self.machine_id.id,
             'ticket_id': self.id,
         })
+        inspection_id.set_inspection_type_items()
+
         return {
             "type": "ir.actions.act_window",
             'res_model': 'workshop.inspect',

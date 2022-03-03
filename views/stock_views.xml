@@ -38,6 +38,19 @@
                                 <span class="o_stat_text">Products</span>
                             </div>
                         </button>
+
+                        <button class="oe_stat_button"
+                                name="%(workshop.action_models)d"
+                                icon="fa-th-list"
+                                type="action"
+                                context="{'search_default_brand_id': active_id, 'default_brand_id': active_id}">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="models_count"/>
+                                </span>
+                                <span class="o_stat_text">Models</span>
+                            </div>
+                        </button>
                     </div>
 
                     <style>
@@ -186,7 +199,8 @@
                 <filter string="Archived" name="filter_by_un_active" domain="[('active', '!=', True)]"/>
                 <separator/>
                 <field name="active"/>
-                <filter string="Active" name="group_by_active" context="{'group_by':'active'}"/>
+                <field name="brand_id"/>
+                <filter string="Brand" name="group_by_brand" context="{'group_by':'brand_id'}"/>
             </search>
         </field>
     </record>
@@ -254,8 +268,13 @@
                             <field name="active" invisible="1"/>
                         </group>
                     </group>
-                    <group string="Description">
-                        <field name="description" nolabel="1"/>
+                    <group>
+                        <group string="Description">
+                            <field name="description" nolabel="1"/>
+                        </group>
+                        <group>
+                            <field name="brand_id" options="{'no_create': True}"/>
+                        </group>
                     </group>
                 </sheet>
                 <div class="oe_chatter">
@@ -273,6 +292,7 @@
         <field name="arch" type="xml">
             <tree string="product.model">
                 <field name="name"/>
+                <field name="brand_id"/>
                 <field name="description"/>
                 <field name="active"/>
             </tree>
@@ -296,8 +316,11 @@
                             </div>
                             <div class="oe_kanban_details">
                                 <h4 class="mt0 mb0">
-                                    <field name="name"/>
+                                    <field name="brand_id"/>
                                 </h4>
+                                <h3 class="mt0 mb0">
+                                    <field name="name"/>
+                                </h3>
                                 <strong class="o_kanban_record_title">
                                     <p>
                                         <field name="products_count"/>

@@ -20,6 +20,7 @@
         'views/stock_views.xml',
         'views/workshop_views.xml',
         'views/order_inspect.xml',
+        'views/order_estimate.xml',
         'views/sale_order.xml',
         'report/order_template.xml',
         'report/inspection_template.xml',
