@@ -1,0 +1,12 @@
+<odoo>
+    <data>
+        <!--workorder menu -->
+        <menuitem id="workshop_root" name="WorkShop" web_icon="workshop,static/description/app.png"/>
+        <menuitem id="work_order_calendar" name="Calendar" parent="workshop_root" sequence="1"
+                  action="calendar.action_calendar_event"/>
+
+        <menuitem id="workshop_config" name="Configuration" sequence="99" parent="workshop_root"
+                  groups="workshop.workshop_manager"/>
+
+    </data>
+</odoo>

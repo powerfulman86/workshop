@@ -164,6 +164,6 @@
             <field name="view_mode">kanban,tree,pivot,form</field>
         </record>
 
-        <menuitem id="machine_menu" name="Machine" action="machine_action" parent="work_order_root_menu" sequence="1"/>
+        <menuitem id="machine_menu" name="Car ID" action="machine_action" parent="workshop_root" sequence="2"/>
     </data>
 </odoo>

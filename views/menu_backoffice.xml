@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <menuitem id="backoffice_root" name="Back Office" web_icon="workshop,static/description/app.png"/>
+        <!--sales-->
+        <menuitem id="backoffice_sales" name="Sales" parent="backoffice_root" sequence="3"/>
+
+        <menuitem id="sale_orders" name="Sales Orders" parent="backoffice_sales" sequence="1"
+                  action="sale.action_orders"/>
+        <menuitem id="sale_customers" name="Customers" parent="backoffice_sales" sequence="2"
+                  action="account.res_partner_action_customer"/>
+        <menuitem id="sale_payment" name="Orders Payment" parent="backoffice_sales" sequence="3"
+                  action="account.action_account_payments"/>
+        <menuitem id="sale_pricelist" name="Sales PriceList" parent="backoffice_sales" sequence="3"
+                  action="product.product_pricelist_action2"/>
+
+        <!--purchase-->
+        <menuitem id="backoffice_purchase" name="Purchase" parent="backoffice_root" sequence="4"/>
+        <menuitem id="purchase_orders" name="Purchase Orders" parent="backoffice_purchase" sequence="1"
+                  action="purchase.purchase_form_action"/>
+
+        <menuitem id="retail_vendor" name="Vendors" parent="backoffice_purchase" sequence="2"
+                  action="account.res_partner_action_supplier"/>
+        <menuitem id="purchase_payment" name="Orders Payment" parent="backoffice_purchase" sequence="3"
+                  action="account.action_account_payments_payable"/>
+        <menuitem id="vendor_pricelist" name="Vendor PriceList" parent="backoffice_purchase" sequence="4"
+                  action="product.product_supplierinfo_type_action"/>
+
+        <!--stock-->
+        <menuitem id="backoffice_stock" name="Inventory" parent="backoffice_root" sequence="5"/>
+        <menuitem id="warehouse_transfer" name="Transfers" parent="backoffice_stock" sequence="4"
+                  action="stock.action_picking_tree_all"/>
+        <menuitem id="menu_valuation" name="Inventory Valuation" parent="backoffice_stock" sequence="5"
+                  action="stock.action_inventory_form"/>
+
+
+         <!--reporting-->
+        <menuitem id="backoffice_report" name="Reporting" parent="backoffice_root" sequence="6"/>
+        <menuitem id="sales_report" name="Sales Reports" parent="backoffice_report" sequence="2"
+                  action="sale.action_order_report_all"/>
+        <menuitem id="purchase_report" name="Purchase Report" parent="backoffice_report" sequence="3"
+                  action="purchase.action_purchase_order_report_all"/>
+
+        <!--configuration-->
+        <menuitem id="backoffice_setting" name="Configuration" sequence="99" parent="backoffice_root"/>
+        <menuitem id="workshop_warehouse_config" name="Warehoue" parent="backoffice_setting" sequence="1"/>
+        <menuitem id="warehouse_menu" name="Warehouse" parent="backoffice_setting" sequence="1"
+                  action="stock.action_warehouse_form"/>
+        <menuitem id="product_category" name="Product Category" parent="backoffice_setting" sequence="2"
+                  action="product.product_category_action_form"/>
+        <menuitem id="products" name="Products" parent="backoffice_setting" sequence="3"
+                  action="stock.product_template_action_product"/>
+
+    </data>
+</odoo>

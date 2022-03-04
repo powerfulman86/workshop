@@ -92,8 +92,8 @@
 
         <menuitem id="work_order_estimate_menu"
                   name="Estimate"
-                  parent="work_order_root_menu"
-                  action="work_order_estimate_action" sequence="4"/>
+                  parent="workshop_root"
+                  action="work_order_estimate_action" sequence="5"/>
 
     </data>
 </odoo>

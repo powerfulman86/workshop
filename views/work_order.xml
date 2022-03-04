@@ -251,7 +251,7 @@
 
         <menuitem id="work_order_menu"
                   name="Work-Order"
-                  parent="work_order_root_menu"
-                  action="work_order_action" sequence="5"/>
+                  parent="workshop_root"
+                  action="work_order_action" sequence="6"/>
     </data>
 </odoo>

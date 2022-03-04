@@ -181,7 +181,7 @@
 
         <menuitem id="workshop_ticket_menu"
                   name="Ticket"
-                  parent="work_order_root_menu"
-                  action="workshop_ticket_action" sequence="2"/>
+                  parent="workshop_root"
+                  action="workshop_ticket_action" sequence="3"/>
     </data>
 </odoo>

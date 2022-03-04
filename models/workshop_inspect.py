@@ -91,7 +91,7 @@ class WorkshopInspect(models.Model):
             rec.estimate_count = len(rec.estimate_ids.ids)
 
     def action_close(self):
-        if len(self.inspect_line) ==0 :
+        if len(self.inspect_line) == 0:
             raise UserError(_('You Must Add Line To Inspection.'))
 
         for rec in self.inspect_line:
@@ -139,23 +139,23 @@ class WorkshopInspect(models.Model):
             'machine_id': self.machine_id.id,
             'inspect_id': self.id,
         })
-        # return {
-        #     "type": "ir.actions.act_window",
-        #     'res_model': 'workshop.order',
-        #     "views": [[False, "form"]],
-        #     "res_id": work_order_id.id,
-        #     "context": {"create": False},
-        # }
+        return {
+            "type": "ir.actions.act_window",
+            'res_model': 'workshop.estimate',
+            "views": [[False, "form"]],
+            "res_id": inspect_order_id.id,
+            "context": {"create": False},
+        }
 
     def action_view_estimate_order(self):
         self.ensure_one()
-        work_order = self.env['workshop.order'].search([('inspect_id', '=', self.id)])
-        if len(work_order.ids) != 0:
+        inspect_order_id = self.env['workshop.estimate'].search([('inspect_id', '=', self.id)])
+        if len(inspect_order_id.ids) != 0:
             return {
                 "type": "ir.actions.act_window",
-                'res_model': 'workshop.order',
+                'res_model': 'workshop.estimate',
                 "views": [[False, "form"]],
-                "res_id": work_order.id,
+                "res_id": inspect_order_id.id,
                 "context": {"create": False},
             }
 
