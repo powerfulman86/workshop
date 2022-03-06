@@ -73,6 +73,9 @@ class ProductModel(models.Model):
     logo = fields.Binary('Logo File', attachment=True)
     bannar = fields.Binary('Brand Bannar', attachment=True)
     brand_id = fields.Many2one('product.brand', string='Brand', help='Select a brand for this product')
+    model_type = fields.Selection(string="Type",
+                                  selection=[('hatchback', 'Hatchback'), ('sedan', 'Sedan'), ('coupe', 'Coupe'), ],
+                                  required=False, )
 
     @api.depends('product_ids')
     def _compute_products_count(self):

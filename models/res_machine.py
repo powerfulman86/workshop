@@ -15,7 +15,7 @@ class ResMachine(models.Model):
     code = fields.Char('Chase Number', required=True, )
     engine_number = fields.Char('Engine Number', required=True, )
     machine_colour = fields.Char(string="Colour", required=False, )
-    model_id = fields.Many2one('product.model')
+    model_id = fields.Many2one('product.model', domain="[('brand_id', '=', brand_id)]")
     brand_id = fields.Many2one('product.brand', string='Brand', help='Select a brand for this Machine')
     production_year = fields.Char(string="Production Year", size=4, required=True)
     capacity = fields.Integer(string="Capacity", required=False, )
@@ -40,6 +40,7 @@ class ResMachine(models.Model):
     code5 = fields.Char(string="code5", required=True, size=1)
     code6 = fields.Char(string="code6", required=True, size=1)
     code7 = fields.Char(string="code7", size=1)
+    owner_name = fields.Char(string="Owner Name", required=False, )
     work_order_count = fields.Integer(compute="_compute_count_all", string='Work-orders')
     work_order_ids = fields.One2many('workshop.order', 'machine_id')
     inspect_count = fields.Integer(compute="_compute_count_all", string='Inspections')
@@ -54,6 +55,11 @@ class ResMachine(models.Model):
             "Machine Name must be unique across the database!",
         )
     ]
+
+    @api.onchange('partner_id')
+    def _onchange_partner(self):
+        if not self.owner_name:
+            self.owner_name = self.partner_id.name
 
     @api.depends('work_order_ids', 'inspect_ids', 'ticket_ids')
     def _compute_count_all(self):
