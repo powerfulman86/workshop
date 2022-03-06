@@ -4,28 +4,28 @@
         <record id="Work_Order" model="ir.sequence">
             <field name="name">workshop.order.seq</field>
             <field name="code">workshop.order</field>
-            <field name="prefix">WO/</field>
+            <field name="prefix">JO-</field>
             <field name="padding">5</field>
         </record>
 
         <record id="workshop_Ticket" model="ir.sequence">
             <field name="name">workshop.ticket.seq</field>
             <field name="code">workshop.ticket</field>
-            <field name="prefix">T/</field>
+            <field name="prefix">TK-</field>
             <field name="padding">5</field>
         </record>
 
         <record id="Work_Order_inspect" model="ir.sequence">
             <field name="name">workshop.inspect.seq</field>
             <field name="code">workshop.inspect</field>
-            <field name="prefix">I/</field>
+            <field name="prefix">IS-</field>
             <field name="padding">5</field>
         </record>
 
         <record id="Workshop_estimate" model="ir.sequence">
             <field name="name">workshop.estimate.seq</field>
             <field name="code">workshop.estimate</field>
-            <field name="prefix">ES/</field>
+            <field name="prefix">ES-</field>
             <field name="padding">5</field>
         </record>
     </data>

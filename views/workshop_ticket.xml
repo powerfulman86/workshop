@@ -45,13 +45,14 @@
                 <form string="Workshop Ticket">
                     <header>
                         <button name="create_inspection" type="object" string="Create Inspection" class="oe_highlight"
-                        attrs="{'invisible':[('inspect_count', '==', 1)]}"/>
+                                attrs="{'invisible':[('inspect_count', '==', 1)]}"/>
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet string="Ticket">
                         <div class="oe_button_box" name="button_box">
                             <button name="action_view_inspect" type="object" class="oe_stat_button"
-                                    icon="fa-pencil-square-o" string="Inspections" attrs="{'invisible':[('inspect_count', '==', 0)]}">
+                                    icon="fa-pencil-square-o" string="Inspections"
+                                    attrs="{'invisible':[('inspect_count', '==', 0)]}">
                                 <field name="inspect_count" invisible="1"/>
                             </button>
                         </div>
@@ -60,18 +61,26 @@
                             <h3>
                                 <field name="name" readonly="1"/>
                             </h3>
+                            <field name="machine_id" options="{'no_create': True}"
+                                   attrs="{'readonly': [('is_automatic', '=', True)]}"/>
                         </div>
 
                         <notebook>
+                            <page string="Customer Issues">
+                                <field name="ticket_line"
+                                       widget="section_and_note_one2many"
+                                       mode="tree">
+                                    <tree string="Ticket Lines" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="line_details"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Notes">
+                                <field name="ticket_notes"/>
+                            </page>
                             <page string="Main Data">
                                 <group>
-                                    <group>
-                                        <field name="machine_id"/>
-                                        <field name="partner_id"/>
-                                        <field name="machine_kilometer"/>
-                                        <field name="user_id"/>
-                                        <field name="date_assign"/>
-                                    </group>
                                     <group>
                                         <field name="ticket_date"/>
                                         <field name="expected_date"/>
@@ -79,10 +88,13 @@
                                         <field name="priority" widget="priority"/>
                                         <field name="tag_ids" widget="many2many_tags"/>
                                     </group>
+                                    <group>
+                                        <field name="partner_id" options="{'no_create': True}"
+                                               attrs="{'readonly': [('is_automatic', '=', True)]}"/>
+                                        <field name="machine_kilometer"/>
+                                        <field name="is_automatic" invisible="1"/>
+                                    </group>
                                 </group>
-                            </page>
-                            <page string="Notes">
-                                <field name="ticket_notes"/>
                             </page>
                         </notebook>
                     </sheet>

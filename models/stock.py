@@ -53,7 +53,7 @@ class ProductBrand(models.Model):
         values['code'] = "BR" + self.check_brand_code(self.random_number(4))
         return super(ProductBrand, self).create(values)
 
-    @api.depends('product_ids','model_ids')
+    @api.depends('product_ids', 'model_ids')
     def _compute_products_count(self):
         for brand in self:
             brand.products_count = len(brand.product_ids)
@@ -86,3 +86,5 @@ class ProductTemplate(models.Model):
     model_id = fields.Many2many('product.model', string='Model', help='Select a brand for this product',
                                 domain="[('brand_id', '=', brand_id)]")
     brand_id = fields.Many2one('product.brand', string='Brand', help='Select a brand for this product')
+    inspect_item_id = fields.Many2one('workshop.inspect.items', string='Inspect Item',
+                                      help='Select Inspection Item for this product')

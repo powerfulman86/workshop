@@ -100,6 +100,7 @@
                     <field name="category_id"/>
                     <field name="inspect_item_type" widget="many2many_tags"/>
                     <field name="note"/>
+                    <field name="products_count"/>
                     <field name="active"/>
                 </tree>
             </field>
@@ -180,6 +181,10 @@
                             <h3>
                                 <field name="name" readonly="1"/>
                             </h3>
+                            <h3>
+                                <field name="machine_id" options="{'no_create': True}"
+                                       attrs="{'readonly': [('is_automatic', '=', True)]}"/>
+                            </h3>
                         </div>
 
                         <notebook>
@@ -188,12 +193,13 @@
                                     <group>
                                         <field name="inspect_date"/>
                                         <field name="inspect_type" options="{'no_create': True}"/>
-                                        <field name="partner_id" options="{'no_create': True}"/>
-                                        <field name="machine_id" options="{'no_create': True}"/>
-                                    </group>
-                                    <group>
                                         <field name="date_assign"/>
                                         <field name="user_id" options="{'no_create': True}"/>
+                                    </group>
+                                    <group>
+                                        <field name="partner_id" options="{'no_create': True}"
+                                               attrs="{'readonly': [('is_automatic', '=', True)]}"/>
+                                        <field name="is_automatic" invisible="1"/>
                                     </group>
                                 </group>
                             </page>

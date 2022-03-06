@@ -23,7 +23,7 @@
         </record>
 
         <record id="machine_kanban" model="ir.ui.view">
-            <field name="name">res.machine</field>
+            <field name="name">res.machine.kanban</field>
             <field name="model">res.machine</field>
             <field name="arch" type="xml">
                 <kanban class="o_hr_employee_kanban">
@@ -75,15 +75,15 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_view_ticket" type="object" class="oe_stat_button"
-                                    icon="fa-pencil-square-o" string="Tickets">
+                                    icon="fa-pencil-square-o" string="Tickets" groups="workshop.workshop_manager">
                                 <field name="ticket_count"/>
                             </button>
                             <button name="action_view_inspect" type="object" class="oe_stat_button"
-                                    icon="fa-pencil-square-o" string="Inspections">
+                                    icon="fa-pencil-square-o" string="Inspections" groups="workshop.workshop_manager">
                                 <field name="inspect_count"/>
                             </button>
                             <button name="action_view_work_orders" type="object" class="oe_stat_button"
-                                    icon="fa-pencil-square-o" string="Work-Orders">
+                                    icon="fa-pencil-square-o" string="Work-Orders" groups="workshop.workshop_manager">
                                 <field name="work_order_count"/>
                             </button>
                         </div>

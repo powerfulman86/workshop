@@ -357,7 +357,7 @@
               action="action_models"/>
 
     <!--product-->
-    <record id="view_product_magento_form" model="ir.ui.view">
+    <record id="view_product_workshop_form" model="ir.ui.view">
         <field name="name">view.product.brand.form.inherit</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
@@ -365,7 +365,7 @@
             <xpath expr="//field[@name='barcode']" position="after">
                 <field name='brand_id' groups="stock.group_stock_manager"/>
                 <field name='model_id' groups="stock.group_stock_manager" widget="many2many_tags"/>
-
+                <field name='inspect_item_id' groups="stock.group_stock_manager"/>
             </xpath>
         </field>
     </record>

@@ -29,9 +29,11 @@
 
         <!--stock-->
         <menuitem id="backoffice_stock" name="Inventory" parent="backoffice_root" sequence="5"/>
-        <menuitem id="warehouse_transfer" name="Transfers" parent="backoffice_stock" sequence="4"
+        <menuitem id="products" name="Products" parent="backoffice_stock" sequence="1"
+                  action="stock.product_template_action_product"/>
+        <menuitem id="warehouse_transfer" name="Transfers" parent="backoffice_stock" sequence="2"
                   action="stock.action_picking_tree_all"/>
-        <menuitem id="menu_valuation" name="Inventory Valuation" parent="backoffice_stock" sequence="5"
+        <menuitem id="menu_valuation" name="Inventory Valuation" parent="backoffice_stock" sequence="3"
                   action="stock.action_inventory_form"/>
 
 
@@ -49,8 +51,7 @@
                   action="stock.action_warehouse_form"/>
         <menuitem id="product_category" name="Product Category" parent="backoffice_setting" sequence="2"
                   action="product.product_category_action_form"/>
-        <menuitem id="products" name="Products" parent="backoffice_setting" sequence="3"
-                  action="stock.product_template_action_product"/>
+
 
     </data>
 </odoo>

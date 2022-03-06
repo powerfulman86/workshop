@@ -52,12 +52,13 @@
                                 <group>
                                     <group>
                                         <field name="order_date"/>
-                                        <field name="partner_id" options="{'no_create': True}"/>
-                                        <field name="machine_id" options="{'no_create': True}"/>
+                                        <field name="partner_id" options="{'no_create': True}" attrs="{'readonly': [('is_automatic', '=', True)]}"/>
+                                        <field name="machine_id" options="{'no_create': True}" attrs="{'readonly': [('is_automatic', '=', True)]}"/>
                                     </group>
                                     <group>
-                                        <field name="date_assign"/>
-                                        <field name="user_id" options="{'no_create': True}"/>
+                                        <field name="date_assign" invisible="1"/>
+                                        <field name="user_id" options="{'no_create': True}" invisible="1"/>
+                                        <field name="is_automatic" invisible="1"/>
                                     </group>
                                 </group>
                             </page>

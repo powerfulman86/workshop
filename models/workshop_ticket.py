@@ -69,9 +69,12 @@ class WorkshopTicket(models.Model):
 
     machine_kilometer = fields.Integer(string="Machine Kilometer", required=False, )
     ticket_notes = fields.Html('Notes', help='Notes')
-
+    is_automatic = fields.Boolean(string="Is Automatic", default=False)
     inspect_ids = fields.One2many('workshop.inspect', 'ticket_id')
     inspect_count = fields.Integer('Inspect Count', compute="compute_inspect_count")
+
+    ticket_line = fields.One2many(comodel_name="workshop.ticket.line", inverse_name="ticket_id", string="Lines",
+                                  required=False, )
 
     @api.depends('inspect_ids')
     def compute_inspect_count(self):
@@ -83,6 +86,7 @@ class WorkshopTicket(models.Model):
             'partner_id': self.partner_id.id,
             'machine_id': self.machine_id.id,
             'ticket_id': self.id,
+            'is_automatic': True,
         })
         inspection_id.set_inspection_type_items()
 
@@ -154,3 +158,20 @@ class WorkshopTicket(models.Model):
             if rec.stage_id.sequence != 1:
                 raise UserError(_('You can not delete a Work-Order Which Is Not In Draft State.'))
         return super(WorkshopTicket, self).unlink()
+
+
+class WorkshopTicketLine(models.Model):
+    _name = 'workshop.ticket.line'
+    _description = 'Work-shop Ticket line'
+    _order = "sequence, id desc"
+
+    name = fields.Char('Name')
+    sequence = fields.Integer(string='Sequence', default=10)
+    ticket_id = fields.Many2one(comodel_name="workshop.ticket", string="Ticket Id", required=False, )
+    partner_id = fields.Many2one('res.partner', string='Customer', related="ticket_id.partner_id", store=True)
+    machine_id = fields.Many2one('res.machine', string='Machine', related="ticket_id.machine_id", store=True)
+    user_id = fields.Many2one('res.users', string='Assigned to', related="ticket_id.user_id", store=True)
+    stage_id = fields.Many2one('workshop.ticket.stage', related="ticket_id.stage_id", store=True)
+    ticket_date = fields.Datetime(string='Inspect Date', related="ticket_id.ticket_date", store=True)
+
+    line_details = fields.Char(string="Details", required=True, )

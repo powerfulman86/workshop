@@ -33,6 +33,13 @@ class WorkshopInspectItems(models.Model):
     note = fields.Text(string="Note", track_visibility='always')
     category_id = fields.Many2one(comodel_name="workshop.inspect.category", string="Inspect Category", required=True, )
     inspect_item_type = fields.Many2many(comodel_name='workshop.inspect.type', relation="inspect_type_items", )
+    product_ids = fields.One2many('product.template', 'inspect_item_id', string='Item Products', )
+    products_count = fields.Integer(string='Number of products', compute='_compute_products_count', )
+
+    @api.depends('product_ids')
+    def _compute_products_count(self):
+        for rec in self:
+            rec.products_count = len(rec.product_ids)
 
 
 class WorkshopInspectType(models.Model):
@@ -84,6 +91,7 @@ class WorkshopInspect(models.Model):
                                    required=False, readonly=True, states={'draft': [('readonly', False)]}, )
     estimate_ids = fields.One2many('workshop.estimate', 'inspect_id')
     estimate_count = fields.Integer('Estimate Count', compute="_compute_estimate_count", store=True)
+    is_automatic = fields.Boolean(string="Is Automatic", default=False)
 
     @api.depends('estimate_ids')
     def _compute_estimate_count(self):
@@ -138,6 +146,7 @@ class WorkshopInspect(models.Model):
             'partner_id': self.partner_id.id,
             'machine_id': self.machine_id.id,
             'inspect_id': self.id,
+            'is_automatic': True,
         })
         return {
             "type": "ir.actions.act_window",

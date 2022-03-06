@@ -35,6 +35,7 @@ class WorkshopEstimate(models.Model):
                                  states={'draft': [('readonly', False)]}, )
     date_assign = fields.Datetime(string='Assigning Date', index=True, copy=False, readonly=True,
                                   states={'draft': [('readonly', False)]}, )
+    is_automatic = fields.Boolean(string="Is Automatic", default=False)
 
     def action_close(self):
         self.state = 'close'

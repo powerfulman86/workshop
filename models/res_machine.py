@@ -141,6 +141,7 @@ class ResMachine(models.Model):
         ticket_id = self.env['workshop.ticket'].create({
             'partner_id': self.partner_id.id,
             'machine_id': self.id,
+            'is_automatic': True,
         })
         return {
             "type": "ir.actions.act_window",
