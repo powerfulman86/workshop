@@ -18,6 +18,15 @@ AVAILABLE_STATE = [
 ]
 
 
+class WorkshopClientComplains(models.Model):
+    _name = 'workshop.client.complain'
+    _description = 'WorkShop Client Complain'
+
+    name = fields.Char(string="Name")
+    description = fields.Text(translate=True)
+    active = fields.Boolean(string='Active', default=True)
+
+
 class WorkshopTicketStage(models.Model):
     _name = 'workshop.ticket.stage'
     _description = 'ticket Stage'
@@ -71,15 +80,23 @@ class WorkshopTicket(models.Model):
     ticket_notes = fields.Html('Notes', help='Notes')
     is_automatic = fields.Boolean(string="Is Automatic", default=False)
     inspect_ids = fields.One2many('workshop.inspect', 'ticket_id')
-    inspect_count = fields.Integer('Inspect Count', compute="compute_inspect_count")
+    inspect_count = fields.Integer('Inspect Count', compute="compute_related_count")
+    order_ids = fields.One2many('workshop.order', 'ticket_id')
+    order_count = fields.Integer('Order Count', compute="compute_related_count")
 
     ticket_line = fields.One2many(comodel_name="workshop.ticket.line", inverse_name="ticket_id", string="Lines",
                                   required=False, )
+    ticket_receipt = fields.One2many(comodel_name="workshop.ticket.receipt", inverse_name="ticket_id", string="Receipt",
+                                     required=False, )
+    ticket_type = fields.Selection(string="Type",
+                                   selection=[('check', 'Check'), ('followup', 'Follow Up'), ('repair', 'Repair'), ],
+                                   required=True, default='check')
 
-    @api.depends('inspect_ids')
-    def compute_inspect_count(self):
+    @api.depends('inspect_ids', 'order_ids')
+    def compute_related_count(self):
         for rec in self:
             rec.inspect_count = len(rec.inspect_ids.ids)
+            rec.order_count = len(rec.order_ids.ids)
 
     def create_inspection(self):
         inspection_id = self.env['workshop.inspect'].create({
@@ -173,5 +190,36 @@ class WorkshopTicketLine(models.Model):
     user_id = fields.Many2one('res.users', string='Assigned to', related="ticket_id.user_id", store=True)
     stage_id = fields.Many2one('workshop.ticket.stage', related="ticket_id.stage_id", store=True)
     ticket_date = fields.Datetime(string='Inspect Date', related="ticket_id.ticket_date", store=True)
+    complain_type = fields.Many2one(comodel_name="workshop.client.complain", string="Complain Type", required=True, )
+    complain_details = fields.Char(string="Details", )
 
-    line_details = fields.Char(string="Details", required=True, )
+
+class WorkshopTicketReceipt(models.Model):
+    _name = 'workshop.ticket.receipt'
+    _description = 'Work-shop Ticket Receipt'
+    _order = "sequence, id desc"
+
+    name = fields.Char('Name')
+    sequence = fields.Integer(string='Sequence', default=10)
+    ticket_id = fields.Many2one(comodel_name="workshop.ticket", string="Ticket Id", required=False, )
+    partner_id = fields.Many2one('res.partner', string='Customer', related="ticket_id.partner_id", store=True)
+    machine_id = fields.Many2one('res.machine', string='Machine', related="ticket_id.machine_id", store=True)
+    user_id = fields.Many2one('res.users', string='Assigned to', related="ticket_id.user_id", store=True)
+    stage_id = fields.Many2one('workshop.ticket.stage', related="ticket_id.stage_id", store=True)
+    ticket_date = fields.Datetime(string='Inspect Date', related="ticket_id.ticket_date", store=True)
+    machine_part = fields.Selection(string="Machine Part",
+                                    selection=[('01', 'عامه'), ('02', 'زجاج بربريز امامي'), ('03', 'كابوت'),
+                                               ('04', 'اكصدام امامي'), ('05', 'اللوحات الاماميه'), ('06', 'شبكه امامي'),
+                                               ('07', 'فوانيس امامي'), ('08', 'فوج امامي'), ('09', 'مرايات امامي'),
+                                               ('10', 'زجاج بربريز خلفي'), ('11', 'علامه خلفي'), ('12', 'شنطة'),
+                                               ('13', 'اكصدام خلفي'), ('14', 'فوانيس خلفي'), ('15', 'اللوحه الخلفيه'),
+                                               ('16', 'اريال'), ('17', 'طبه الهوك'), ('18', 'رفرف امامي يمين'),
+                                               ('19', 'باب امامي يمين'), ('20', 'باب خلفي يمين'),
+                                               ('21', 'رفرف خلفي يمين'), ('22', 'رفرف امامي شمال'),
+                                               ('23', 'باب امامي شمال'), ('24', 'باب خلفي شمال'),
+                                               ('25', 'رفرف خلفي شمال'), ('26', 'كاوتش استبن')],
+                                    required=True, )
+    part_status = fields.Selection(string="Status",
+                                   selection=[('working', 'Working'), ('malfunction', 'Not Working'), ],
+                                   required=True, default='working')
+    part_details = fields.Char(string="Notes", )

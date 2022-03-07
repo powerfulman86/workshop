@@ -1,7 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- Workshop-Ticket -->
+        <!--Client complain-->
+        <record id="workshop_client_complain_search" model="ir.ui.view">
+            <field name="name">Client Complains search</field>
+            <field name="model">workshop.client.complain</field>
+            <field name="arch" type="xml">
+                <search string="Tags">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="workshop_client_complain_view" model="ir.ui.view">
+            <field name="name">Client Complains Views</field>
+            <field name="model">workshop.client.complain</field>
+            <field name="arch" type="xml">
+                <tree string="Tags" editable="bottom">
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="workshop_client_complain_action" model="ir.actions.act_window">
+            <field name="name">Client Complains</field>
+            <field name="res_model">workshop.client.complain</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new Client Complain
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="workshop_client_complain_action" id="menu_workshop_client_complain_act"
+                  parent="workshop_config"/>
+
+        <!--Workshop-Ticket -->
         <record id="workshop_ticket_view_search" model="ir.ui.view">
             <field name="name">workshop_ticket_view_search</field>
             <field name="model">workshop.ticket</field>
@@ -61,9 +99,15 @@
                             <h3>
                                 <field name="name" readonly="1"/>
                             </h3>
-                            <field name="machine_id" options="{'no_create': True}"
-                                   attrs="{'readonly': [('is_automatic', '=', True)]}"/>
                         </div>
+
+                        <group>
+                            <group>
+                                <field name="machine_id" options="{'no_create': True}"
+                                       attrs="{'readonly': [('is_automatic', '=', True)]}"/>
+                                <field name="ticket_type"/>
+                            </group>
+                        </group>
 
                         <notebook>
                             <page string="Customer Issues">
@@ -72,7 +116,22 @@
                                        mode="tree">
                                     <tree string="Ticket Lines" editable="bottom">
                                         <field name="sequence" widget="handle"/>
-                                        <field name="line_details"/>
+                                        <field name="complain_type" options="{'no_create': True}"/>
+                                        <field name="complain_details"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Receipt Check">
+                                <field name="ticket_receipt"
+                                       widget="section_and_note_one2many"
+                                       mode="tree">
+                                    <tree string="Receipt Check" editable="bottom"
+                                          decoration-danger="part_status=='malfunction'"
+                                          decoration-success="part_status=='working'">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="machine_part"/>
+                                        <field name="part_status"/>
+                                        <field name="part_details"/>
                                     </tree>
                                 </field>
                             </page>

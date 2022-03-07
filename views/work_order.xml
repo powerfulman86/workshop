@@ -46,21 +46,18 @@
                     <header>
                         <field name="sale_created" invisible="1"/>
                         <button name="create_sale" type="object" string="create sale order" class="oe_highlight"
-                        attrs="{'invisible':[('sale_created', '=', True)]}"/>
+                                attrs="{'invisible':[('sale_created', '=', True)]}"/>
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet string="Work-Order">
                         <div class="oe_button_box" name="button_box">
-                            <button name="action_view_inspect" type="object" class="oe_stat_button"
-                                    icon="fa-pencil-square-o" string="Inspections">
-                            </button>
                             <button name="action_view_sale" type="object" class="oe_stat_button"
                                     icon="fa-pencil-square-o" string="Sales">
-                                <field name="sales_count" />
+                                <field name="sales_count"/>
                             </button>
                             <button name="action_view_invoice" type="object" class="oe_stat_button"
                                     icon="fa-pencil-square-o" string="Invoices">
-                                <field name="invoice_count" />
+                                <field name="invoice_count"/>
                             </button>
                         </div>
 
@@ -83,72 +80,47 @@
                                 <field name="order_date"/>
                                 <field name="expected_date"/>
                                 <field name="date_end"/>
-                                <field name="inspection_receive"/>
                                 <field name="priority" widget="priority"/>
                                 <field name="tag_ids" widget="many2many_tags"/>
                             </group>
                         </group>
                         <notebook>
-                            <page string="Customer Complain">
-                                <field name="order_complain" widget="section_and_note_one2many" mode="tree">
-                                    <tree string="Work-Order Complain" editable="bottom">
+                            <page string="Required Parts">
+                                <field name="order_parts" widget="section_and_note_one2many" mode="tree">
+                                    <tree string="Work-Order Parts" editable="bottom">
                                         <field name="sequence" widget="handle"/>
-                                        <field name="complain_notes"/>
-                                        <field name="state"/>
+                                        <field name="product_id" options="{'no_open': True}" force_save="1"
+                                               domain="[('sale_ok', '=', True)]"
+                                               widget="product_configurator"/>
+                                        <field name="product_template_id" string="Product" invisible="1"
+                                               options="{'no_open': True}"
+                                               domain="[('sale_ok', '=', True),]"
+                                               widget="product_configurator"/>
+                                        <field name="product_qty"/>
+                                        <field name="price_unit"/>
+                                        <field name="user_id"/>
+                                        <field name="install_date"/>
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Technical Diagnose">
-                                <notebook>
-                                    <page string="Diagnose">
-                                        <field name="order_diagnose" widget="section_and_note_one2many" mode="tree">
-                                            <tree string="Work-Order Diagnose" editable="bottom">
-                                                <field name="sequence" widget="handle"/>
-                                                <field name="user_id"/>
-                                                <field name="technical_notes"/>
-                                                <field name="state"/>
-                                            </tree>
-                                        </field>
-                                    </page>
-                                    <page string="Required Parts">
-                                        <field name="order_parts" widget="section_and_note_one2many" mode="tree">
-                                            <tree string="Work-Order Parts" editable="bottom">
-                                                <field name="sequence" widget="handle"/>
-                                                <field name="product_id" options="{'no_open': True}" force_save="1"
-                                                       domain="[('sale_ok', '=', True)]"
-                                                       widget="product_configurator"/>
-                                                <field name="product_template_id" string="Product" invisible="1"
-                                                       options="{'no_open': True}"
-                                                       domain="[('sale_ok', '=', True),]"
-                                                       widget="product_configurator"/>
-                                                <field name="product_qty"/>
-                                                <field name="price_unit"/>
-                                                <field name="user_id"/>
-                                                <field name="install_date"/>
-                                            </tree>
-                                        </field>
-                                    </page>
-                                    <page string="Services">
-                                        <field name="order_service" widget="section_and_note_one2many" mode="tree">
-                                            <tree string="Work-Order Parts" editable="bottom">
-                                                <field name="sequence" widget="handle"/>
-                                                <field name="product_id" options="{'no_open': True}" force_save="1"
-                                                       domain="[('sale_ok', '=', True)]"
-                                                       widget="product_configurator"/>
-                                                <field name="product_template_id" string="Product" invisible="1"
-                                                       options="{'no_open': True}"
-                                                       domain="[('sale_ok', '=', True),]"
-                                                       widget="product_configurator"/>
-                                                <field name="product_qty" invisible="1"/>
-                                                <field name="price_unit"/>
-                                                <field name="user_id"/>
-                                                <field name="user_id_revise"/>
-                                            </tree>
-                                        </field>
-                                    </page>
-                                </notebook>
+                            <page string="Services">
+                                <field name="order_service" widget="section_and_note_one2many" mode="tree">
+                                    <tree string="Work-Order Parts" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="product_id" options="{'no_open': True}" force_save="1"
+                                               domain="[('sale_ok', '=', True)]"
+                                               widget="product_configurator"/>
+                                        <field name="product_template_id" string="Product" invisible="1"
+                                               options="{'no_open': True}"
+                                               domain="[('sale_ok', '=', True),]"
+                                               widget="product_configurator"/>
+                                        <field name="product_qty" invisible="1"/>
+                                        <field name="price_unit"/>
+                                        <field name="user_id"/>
+                                        <field name="user_id_revise"/>
+                                    </tree>
+                                </field>
                             </page>
-
                             <page string="Notes">
                                 <field name="order_notes"/>
                             </page>

@@ -18,7 +18,7 @@
         <record id="Work_Order_inspect" model="ir.sequence">
             <field name="name">workshop.inspect.seq</field>
             <field name="code">workshop.inspect</field>
-            <field name="prefix">IS-</field>
+            <field name="prefix">TR-</field>
             <field name="padding">5</field>
         </record>
 

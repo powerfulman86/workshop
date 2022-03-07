@@ -36,6 +36,8 @@ class WorkshopEstimate(models.Model):
     date_assign = fields.Datetime(string='Assigning Date', index=True, copy=False, readonly=True,
                                   states={'draft': [('readonly', False)]}, )
     is_automatic = fields.Boolean(string="Is Automatic", default=False)
+    ticket_id = fields.Many2one("workshop.ticket", string="Workshop Ticket", readonly=True,
+                                states={'draft': [('readonly', False)]}, )
 
     def action_close(self):
         self.state = 'close'
@@ -55,3 +57,17 @@ class WorkshopEstimate(models.Model):
         res.name = self.env['ir.sequence'].next_by_code('workshop.estimate') or '/'
         return res
 
+    def _create_work_order(self):
+        work_order_id = self.env['workshop.order'].create({
+            'partner_id': self.partner_id.id,
+            'machine_id': self.machine_id.id,
+            'ticket_id': self.ticket_id.id,
+            'is_automatic': True,
+        })
+        return {
+            "type": "ir.actions.act_window",
+            'res_model': 'workshop.estimate',
+            "views": [[False, "form"]],
+            "res_id": estimate_order_id.id,
+            "context": {"create": False},
+        }

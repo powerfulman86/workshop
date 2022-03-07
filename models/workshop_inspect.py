@@ -142,17 +142,18 @@ class WorkshopInspect(models.Model):
         if len(self.inspect_line) == 0:
             raise UserError(_('Inspection Lines Must Be Recorded to Proceed With Estimate'))
 
-        inspect_order_id = self.env['workshop.estimate'].create({
+        estimate_order_id = self.env['workshop.estimate'].create({
             'partner_id': self.partner_id.id,
             'machine_id': self.machine_id.id,
             'inspect_id': self.id,
+            'ticket_id': self.ticket_id.id,
             'is_automatic': True,
         })
         return {
             "type": "ir.actions.act_window",
             'res_model': 'workshop.estimate',
             "views": [[False, "form"]],
-            "res_id": inspect_order_id.id,
+            "res_id": estimate_order_id.id,
             "context": {"create": False},
         }
 
