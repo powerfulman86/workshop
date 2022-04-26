@@ -7,7 +7,7 @@
         <menuitem id="backoffice_sales" name="Sales" parent="backoffice_root" sequence="3"/>
 
         <menuitem id="sale_orders" name="Sales Orders" parent="backoffice_sales" sequence="1"
-                  action="sale.action_orders"/>
+                  action="sale.action_quotations_with_onboarding"/>
         <menuitem id="sale_customers" name="Customers" parent="backoffice_sales" sequence="2"
                   action="account.res_partner_action_customer"/>
         <menuitem id="sale_payment" name="Orders Payment" parent="backoffice_sales" sequence="3"
@@ -29,19 +29,25 @@
 
         <!--stock-->
         <menuitem id="backoffice_stock" name="Inventory" parent="backoffice_root" sequence="5"/>
-        <menuitem id="products" name="Products" parent="backoffice_stock" sequence="1"
+        <menuitem id="backoffice_invent_dashboard" name="DashBoard" parent="backoffice_stock" sequence="1"
+                  action="stock.stock_picking_type_action"/>
+        <menuitem id="products" name="Products" parent="backoffice_stock" sequence="2"
                   action="stock.product_template_action_product"/>
-        <menuitem id="warehouse_transfer" name="Transfers" parent="backoffice_stock" sequence="2"
+        <menuitem id="warehouse_transfer" name="Transfers" parent="backoffice_stock" sequence="3"
                   action="stock.action_picking_tree_all"/>
-        <menuitem id="menu_valuation" name="Inventory Valuation" parent="backoffice_stock" sequence="3"
+        <menuitem id="menu_valuation" name="Inventory Valuation" parent="backoffice_stock" sequence="4"
                   action="stock.action_inventory_form"/>
 
 
          <!--reporting-->
         <menuitem id="backoffice_report" name="Reporting" parent="backoffice_root" sequence="6"/>
-        <menuitem id="sales_report" name="Sales Reports" parent="backoffice_report" sequence="2"
+        <menuitem id="inventory_report" name="Inventory Report" parent="backoffice_report" sequence="1"
+                  action="stock.action_view_quants"/>
+        <menuitem id="backoffice_product_move_report" name="Product Move" parent="backoffice_report" sequence="2"
+                  action="stock.stock_move_line_action"/>
+        <menuitem id="sales_report" name="Sales Reports" parent="backoffice_report" sequence="3"
                   action="sale.action_order_report_all"/>
-        <menuitem id="purchase_report" name="Purchase Report" parent="backoffice_report" sequence="3"
+        <menuitem id="purchase_report" name="Purchase Report" parent="backoffice_report" sequence="4"
                   action="purchase.action_purchase_order_report_all"/>
 
         <!--configuration-->
