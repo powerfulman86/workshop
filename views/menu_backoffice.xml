@@ -19,7 +19,6 @@
         <menuitem id="backoffice_purchase" name="Purchase" parent="backoffice_root" sequence="4"/>
         <menuitem id="purchase_orders" name="Purchase Orders" parent="backoffice_purchase" sequence="1"
                   action="purchase.purchase_form_action"/>
-
         <menuitem id="retail_vendor" name="Vendors" parent="backoffice_purchase" sequence="2"
                   action="account.res_partner_action_supplier"/>
         <menuitem id="purchase_payment" name="Orders Payment" parent="backoffice_purchase" sequence="3"
@@ -37,7 +36,8 @@
                   action="stock.action_picking_tree_all"/>
         <menuitem id="menu_valuation" name="Inventory Valuation" parent="backoffice_stock" sequence="4"
                   action="stock.action_inventory_form"/>
-
+        <menuitem id="menu_action_production_lot_form_backoffice" parent="backoffice_stock" sequence="5"
+                  action="stock.action_production_lot_form"/>
 
          <!--reporting-->
         <menuitem id="backoffice_report" name="Reporting" parent="backoffice_root" sequence="6"/>
